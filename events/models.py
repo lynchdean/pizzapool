@@ -9,7 +9,7 @@ class Event(models.Model):
     event_name = models.CharField(max_length=100)
     date = models.DateTimeField("date of event")
     description = models.CharField(max_length=200)
-    host = models.ForeignKey(User, editable=False)
+    host = models.ForeignKey(User, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.event_name
@@ -18,6 +18,9 @@ class Event(models.Model):
 class Vehicle(models.Model):
     driver_name = models.CharField(max_length=50)
     driver_contact = models.CharField(max_length=50)
+    meeting_place = models.CharField(max_length=200)
+    date = models.DateTimeField("")
+    notes = models.CharField(max_length=200)
     
     def __str__(self) -> str:
         return self.driver_name
