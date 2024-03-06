@@ -6,13 +6,13 @@ from django.contrib.auth.models import User
 
 class Event(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    event_name = models.CharField(max_length=100)
+    event_title = models.CharField(max_length=100)
     date = models.DateTimeField("date of event")
     description = models.CharField(max_length=200)
     host = models.ForeignKey(User, on_delete=models.CASCADE)
     
     def __str__(self):
-        return self.event_name
+        return self.event_title
 
     
 class Vehicle(models.Model):
