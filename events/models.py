@@ -47,3 +47,9 @@ class PizzaOrderForm(ModelForm):
     class Meta:
         model = PizzaOrder
         fields = '__all__'
+
+class PizzaSlicesForm(ModelForm):
+    class Meta:
+        model = PizzaSlices
+        fields = "__all__"
+

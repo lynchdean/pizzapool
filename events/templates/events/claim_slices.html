@@ -1,8 +1,8 @@
-<!--# events/templates/events/create_pizza_order.html-->
+<!--# events/templates/events/claim_slices.html-->
 {% extends "./main_template.html" %}
 
 {% block content %}
-<h1>New Pizza Order:</h1>
+<h1>Claim Slices:</h1>
 <form action="" method="post" novalidate>
     {% csrf_token %}
     {{ form.as_p }}

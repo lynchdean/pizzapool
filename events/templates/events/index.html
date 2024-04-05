@@ -1,19 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Events</title>
-    <!--# events/templates/events/index.html-->
-</head>
-<body>
-    {% if events_list %}
-        <ul>
-        {% for event in events_list %}
-            <li><a href="{% url 'events:event' event.id %}">{{ event.event_title }} - {{ event.date }}</a></li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>There are currently no events.</p>
-    {% endif %}
-</body>
-</html>
+<!--# events/templates/events/index.html-->
+{% extends "./main_template.html" %}
+
+{% block content %}
+{% if events_list %}
+    <ul>
+    {% for event in events_list %}
+        <li><a href="{% url 'events:event' event.id %}">{{ event.event_title }} - {{ event.date }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>There are currently no events.</p>
+{% endif %}
+{% endblock %}

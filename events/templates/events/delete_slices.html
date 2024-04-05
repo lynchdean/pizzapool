@@ -1,0 +1,11 @@
+<!--# events/templates/events/delete_slices.html-->
+{% extends "./main_template.html" %}
+
+{% block content %}
+<form method="post">{% csrf_token %}
+    <p>Are you sure you want to remove {{ object }}'s slices from the order?</p>
+    <p>Please only do this if you have permission from {{ object }} or are the person making the order. </p>
+    <input type="hidden" name="next" value="{{ request.GET.next }}">
+    <input type="submit" value="Confirm">
+</form>
+{% endblock %}

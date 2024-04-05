@@ -1,8 +1,9 @@
 from django.http import HttpResponseRedirect
 from django.views import generic
 from django.shortcuts import render
+from django.views.generic import DeleteView
 
-from .models import Event, PizzaOrder, PizzaSlices, PizzaOrderForm
+from .models import Event, PizzaOrder, PizzaSlices, PizzaOrderForm, PizzaSlicesForm
 
 
 class IndexView(generic.ListView):
@@ -28,7 +29,6 @@ class EventView(generic.DetailView):
 def create_pizza_order(request, pk):
     if request.method == 'POST':
         form = PizzaOrderForm(request.POST)
-        print(form.fields)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(request.POST.get('next', '/'))
@@ -36,3 +36,25 @@ def create_pizza_order(request, pk):
         data = {'event': Event.objects.get(pk=pk)}
         form = PizzaOrderForm(data)
     return render(request, 'events/create_pizza_order.html', {'form': form, 'pk': pk})
+
+def claim_slices(request, pk):
+    if request.method == 'POST':
+        form = PizzaSlicesForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(request.POST.get('next', '/'))
+    else:
+        data = {'pizza_order': PizzaOrder.objects.get(pk=pk)}
+        form = PizzaSlicesForm(data)
+    return render(request, 'events/claim_slices.html', {'form': form})
+
+class PizzaSlicesDeleteView(DeleteView):
+    model = PizzaSlices
+    template_name = "events/delete_slices.html"
+
+    def get_success_url(self):
+        next_url = self.request.GET.get('next')
+        if next_url:
+            return next_url
+        else:
+            return "/events"
