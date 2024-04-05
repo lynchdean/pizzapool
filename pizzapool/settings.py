@@ -50,7 +50,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'carpool.urls'
+ROOT_URLCONF = 'pizzapool.urls'
 
 TEMPLATES = [
     {
@@ -68,7 +68,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'carpool.wsgi.application'
+WSGI_APPLICATION = 'pizzapool.wsgi.application'
 
 
 # Database

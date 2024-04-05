@@ -1,7 +1,9 @@
 import uuid
 
 from django.db import models
+from django.forms import ModelForm
 from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 class Event(models.Model):
@@ -12,23 +14,36 @@ class Event(models.Model):
     host = models.ForeignKey(User, on_delete=models.CASCADE)
     
     def __str__(self):
-        return self.event_title
+        return f"{self.event_title} - {self.date}"
 
     
-class Vehicle(models.Model):
-    driver_name = models.CharField(max_length=50)
-    driver_contact = models.CharField(max_length=50)
-    meeting_place = models.CharField(max_length=200)
-    date = models.DateTimeField("")
-    notes = models.CharField(max_length=200)
+class PizzaOrder(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    purchaser_name = models.CharField(max_length=50)
+    purchaser_whatsapp = models.CharField(max_length=50)
+    purchaser_revolut = models.CharField(max_length=50)
+    pizza_type = models.CharField(max_length=100)
+    available_slices = models.PositiveIntegerField(default=1,validators=[
+        MinValueValidator(1),
+        MaxValueValidator(8)])
+
+    def __str__(self) -> str:
+        return f"{self.purchaser_name} - {self.pizza_type}"
+
+
+class PizzaSlices(models.Model):
+    pizza_order = models.ForeignKey(PizzaOrder, on_delete=models.CASCADE)
+    buyer_name = models.CharField(max_length=50)
+    buyer_whatsapp = models.CharField(max_length=50)
+    number_of_slices = models.PositiveIntegerField(default=1,validators=[
+        MinValueValidator(1),
+        MaxValueValidator(8)])
     
     def __str__(self) -> str:
-        return self.driver_name
+        return self.buyer_name
 
 
-class Passenger(models.Model):
-    passenger_name = models.CharField(max_length=50)
-    passenger_contact = models.CharField(max_length=50)
-    
-    def __str__(self) -> str:
-        return self.passenger_name
+class PizzaOrderForm(ModelForm):
+    class Meta:
+        model = PizzaOrder
+        fields = '__all__'

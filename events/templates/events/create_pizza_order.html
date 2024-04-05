@@ -1,0 +1,21 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create new order:</title>
+    <!--# events/templates/events/create_pizza_order.html-->
+</head>
+<body>
+
+    {% block content %}
+    <h1>New Pizza Order:</h1>
+    <form action="" method="post" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="hidden" name="next" value="{{ request.GET.next }}">
+        <button type="submit">Submit</button>
+    </form>
+    {% endblock %}
+</body>
+</html>
