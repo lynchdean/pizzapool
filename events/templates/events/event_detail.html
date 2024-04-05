@@ -2,33 +2,38 @@
 {% extends "./main_template.html" %}
 
 {% block content %}
-<div style="text-align:center; color:gray">
+<div class="p-5 text-center bg-secondary text-white">
     <h2>{{ event.event_title }}</h2>
     <p>{{ event.date }}</p>
 </div>
 
-<p>{{ event.description }}</p>
-
-<h3>Pizza Orders:</h3>
-{% if pizza_orders %}
-<ul>
+<div class="container">
+    <h3 class="py-3">Pizza Orders:</h3>
+    {% if pizza_orders %}
     {% for pizza_order in pizza_orders %}
-        <li>{{ pizza_order.purchaser_name }} - {{ pizza_order.pizza_type }} - {{ pizza_order.available_slices }}</li>
-        <ul>
+    <div class="card mb-3" style="width: 18rem;">
+        <div class="card-header">
+            <h5 class="card-title">{{ pizza_order.purchaser_name }} - {{ pizza_order.pizza_type }}</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">Slices: {{ pizza_order.available_slices }} </h6>
+        </div>
+        <ul class="list-group list-group-flush">
             {% for slice in slices %}
                 {% if slice.pizza_order == pizza_order %}
-                    <li>
-                        {{ slice.buyer_name }} - {{ slice.buyer_whatsapp }} - Slices:{{ slice.number_of_slices }}
-                        <button type="button"><a href="{% url 'events:delete-slices' slice.id %}?next={{ request.path|urlencode }}">Remove</a></button>
+                    <li class="list-group-item">
+                        <p>{{ slice.buyer_name }} - {{ slice.buyer_whatsapp }} - Slices:{{ slice.number_of_slices }}</p>
+                        <a href="{% url 'events:delete-slices' slice.id %}?next={{ request.path|urlencode }}" class="btn btn-outline-danger btn-sm">Remove</a>
                     </li>
                 {% endif %}
             {% endfor %}
-            <button type="button"><a href="{% url 'events:claim-slices' pizza_order.id %}?next={{ request.path|urlencode }}">Join Order</a></button>
         </ul>
+        <div class="card-footer text-center">
+           <a href="{% url 'events:claim-slices' pizza_order.id %}?next={{ request.path|urlencode }}">Join Order</a>
+        </div>
+    </div>
     {% endfor %}
-</ul>
-{% else %}
-<p> Nobody has offered to order yet for this event </p>
-{%  endif %}
-<button type="button"><a href="{% url 'events:create-pizza-order' event.id %}?next={{ request.path|urlencode }}">Start a new pizza order</a></button>
+    {% else %}
+    <p> Nobody has offered to order yet for this event </p>
+    {%  endif %}
+    <button type="button"><a href="{% url 'events:create-pizza-order' event.id %}?next={{ request.path|urlencode }}">Start a new pizza order</a></button>
+</div>
 {% endblock %}

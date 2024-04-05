@@ -26,6 +26,17 @@ class EventView(generic.DetailView):
         return context
 
 
+class PizzaSlicesDeleteView(DeleteView):
+    model = PizzaSlices
+    template_name = "events/delete_slices.html"
+
+    def get_success_url(self):
+        next_url = self.request.GET.get('next')
+        if next_url:
+            return next_url
+        else:
+            return "/events"
+
 def create_pizza_order(request, pk):
     if request.method == 'POST':
         form = PizzaOrderForm(request.POST)
@@ -47,14 +58,3 @@ def claim_slices(request, pk):
         data = {'pizza_order': PizzaOrder.objects.get(pk=pk)}
         form = PizzaSlicesForm(data)
     return render(request, 'events/claim_slices.html', {'form': form})
-
-class PizzaSlicesDeleteView(DeleteView):
-    model = PizzaSlices
-    template_name = "events/delete_slices.html"
-
-    def get_success_url(self):
-        next_url = self.request.GET.get('next')
-        if next_url:
-            return next_url
-        else:
-            return "/events"

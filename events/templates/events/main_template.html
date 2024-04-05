@@ -2,14 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>pizzapool</title>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
 </head>
 <body>
-    <div class="header">
-        <h1>Pizzapool</h1>
-    </div>
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand mx-auto mb-0 h1">pizzapool</span>
+        </div>
+    </nav>
 
     {% block content %}
     {% endblock %}
+
+    <nav class="navbar fixed-bottom navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="small mx-auto" href="https://github.com/lynchdean/pizzapool">Created by: Dean Lynch</a>
+        </div>
+    </nav>
 </body>
 </html>
