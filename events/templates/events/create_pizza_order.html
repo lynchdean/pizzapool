@@ -2,14 +2,26 @@
 {% extends "./main_template.html" %}
 
 {% block content %}
-<h1>New Pizza Order:</h1>
-<div class="alert alert-warning" role="alert">
-    DISCLAIMER HERE
+
+<div class="container p-3">
+    <h3>New Pizza Order:</h3>
+    <div class="alert alert-warning" role="alert">
+        DISCLAIMER HERE
+    </div>
+    <div class="card">
+        <div class="card-body">
+            {% load crispy_forms_tags %}
+            <form method="post" class="my-class">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div class="form-text mb-2">There's 8 slices in each pizza - don't forget to take away any you want to keep for yourself. </div>
+                <div class="form-text mb-2"> Please make sure all details are correct before confirming, you cannot edit it once done.</div>
+                <input type="hidden" name="next" value="{{ request.GET.next }}">
+                <div class="d-grid">
+                    <button class="btn btn-success" type="submit">Confirm</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
-<form action="" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="hidden" name="next" value="{{ request.GET.next }}">
-    <button type="submit">Submit</button>
-</form>
 {% endblock %}
