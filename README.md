@@ -1,1 +1,1 @@
-Pizza Ordering App - Work In Progress
+Carpool style pizza ordering web app
