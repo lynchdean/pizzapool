@@ -3,25 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>pizzapool</title>
+    <title>pizzapool 🍕</title>
     {% load bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark">
-        <div class="container-fluid">
-            <span class="navbar-brand mx-auto mb-0 h1">pizzapool</span>
-        </div>
-    </nav>
-
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+        <span class="navbar-brand mx-auto mb-0 h1">🍕pizzapool</span>
+    </div>
+</nav>
+<div class="bg-light min-vh-100">
     {% block content %}
     {% endblock %}
+</div>
 
-    <nav class="navbar fixed-bottom navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="small mx-auto" href="https://github.com/lynchdean/pizzapool">Created by: Dean Lynch</a>
-        </div>
-    </nav>
+<nav class="navbar sticky-bottom navbar-dark bg-dark" data-bs-theme="dark">
+        <span class="navbar-text mx-auto">
+            Created by Dean Lynch
+            <a class="text-secondary text-decoration-none" href="https://github.com/lynchdean/pizzapool">(Source)</a>
+        </span>
+</nav>
 </body>
 </html>

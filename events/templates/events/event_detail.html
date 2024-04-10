@@ -1,39 +1,105 @@
 <!--# events/templates/events/event_detail.html-->
 {% extends "./main_template.html" %}
+{% load static %}
 
 {% block content %}
-<div class="p-5 text-center bg-secondary text-white">
-    <h2>{{ event.event_title }}</h2>
-    <p>{{ event.date }}</p>
+
+<div class="container"
+     style="background-image: url('{% static 'events/bambino.jpg' %}'); width: 100%; background-repeat: no-repeat; background-size: cover; background-position-y: center;">
+    <div class="text-white text-center p-5">
+        <div class="container">
+            <h1 class="display-4">{{ event.event_title }}</h1>
+            <p class="mb-0 mx-auto lead">{{ event.date }}</p>
+        </div>
+    </div>
 </div>
 
-<div class="container">
+<div class="container mb-3">
     <h3 class="py-3">Pizza Orders:</h3>
     {% if pizza_orders %}
     {% for pizza_order in pizza_orders %}
-    <div class="card mb-3" style="width: 18rem;">
-        <div class="card-header">
-            <h5 class="card-title">{{ pizza_order.purchaser_name }} - {{ pizza_order.pizza_type }}</h5>
-            <h6 class="card-subtitle mb-2 text-body-secondary">Slices: {{ pizza_order.available_slices }} </h6>
-        </div>
-        <ul class="list-group list-group-flush">
-            {% for slice in slices %}
+    <div class="card w-100 mb-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col">
+                    <h5 class="card-title">{{ pizza_order.purchaser_name }}</h5>
+                </div>
+                <div class="col text-end">
+                    <h5 class="text-body-secondary">{{ pizza_order.pizza_type }}</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col ">
+                    <p>Revolut: {{ pizza_order.purchaser_revolut }}</p>
+                </div>
+                <div class="col text-end">
+                    <p>Slices: {{ pizza_order.available_slices }} @ €{{ pizza_order.price_per_slice }}</p>
+                </div>
+            </div>
+            <div class="container pb-3">
+                {% for slice in slices %}
                 {% if slice.pizza_order == pizza_order %}
-                    <li class="list-group-item">
-                        <p>{{ slice.buyer_name }} - {{ slice.buyer_whatsapp }} - Slices:{{ slice.number_of_slices }}</p>
-                        <a href="{% url 'events:delete-slices' slice.id %}?next={{ request.path|urlencode }}" class="btn btn-outline-danger btn-sm">Remove</a>
-                    </li>
+                {% if forloop.counter == 1 %}
+                <div class="row small text-uppercase text-secondary mb-2">
+                    <div class="col">
+                        Name
+                    </div>
+                    <div class="col">
+                        WhatsApp
+                    </div>
+                    <div class="col text-end">
+                        Slices
+                    </div>
+                </div>
                 {% endif %}
-            {% endfor %}
-        </ul>
-        <div class="card-footer text-center">
-           <a href="{% url 'events:claim-slices' pizza_order.id %}?next={{ request.path|urlencode }}">Join Order</a>
+                <div class="row mb-2">
+                    <div class="col">
+                        {{ slice.buyer_name }}
+                    </div>
+                    <div class="col">
+                        {{ slice.buyer_whatsapp }}
+                    </div>
+                    <div class="col text-end">
+                        x{{ slice.number_of_slices }}
+                        <a class="btn-close m-2"
+                           href="{% url 'events:delete-slices' slice.id %}?next={{ request.path|urlencode }}"
+                           aria-label="Close"></a>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="container text-center mb-3">
+                {% for x in ""|ljust:pizza_order.get_total_claimed %}
+                ✔️
+                {% endfor %}
+                {% for x in ""|ljust:pizza_order.get_total_remaining %}
+                🍕
+                {% endfor %}
+            </div>
+
+            <div class="d-grid ">
+                {% if pizza_order.get_total_remaining > 0 %}
+                <a class="btn btn-outline-success text-center" role="button"
+                   href="{% url 'events:claim-slices' pizza_order.id %}?next={{ request.path|urlencode }}">Join
+                    Order</a>
+                {% else %}
+                <a class="btn btn-outline-success text-center disabled" role="button" href="">Order Full</a>
+                {% endif  %}
+            </div>
         </div>
     </div>
+
     {% endfor %}
     {% else %}
-    <p> Nobody has offered to order yet for this event </p>
-    {%  endif %}
-    <button type="button"><a href="{% url 'events:create-pizza-order' event.id %}?next={{ request.path|urlencode }}">Start a new pizza order</a></button>
+    <p>Nobody has offered to order yet for this event</p>
+    {% endif %}
+
+    <div class="d-grid">
+        <a class="btn btn-success text-center" role="button"
+           href="{% url 'events:create-pizza-order' event.id %}?next={{ request.path|urlencode }}">Start a new pizza
+            order</a>
+    </div>
 </div>
 {% endblock %}

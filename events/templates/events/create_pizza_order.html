@@ -3,6 +3,9 @@
 
 {% block content %}
 <h1>New Pizza Order:</h1>
+<div class="alert alert-warning" role="alert">
+    DISCLAIMER HERE
+</div>
 <form action="" method="post">
     {% csrf_token %}
     {{ form.as_p }}

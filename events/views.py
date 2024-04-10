@@ -9,11 +9,11 @@ from .models import Event, PizzaOrder, PizzaSlices, PizzaOrderForm, PizzaSlicesF
 class IndexView(generic.ListView):
     template_name = "events/index.html"
     context_object_name = "events_list"
-    
+
     def get_queryset(self):
         return Event.objects.order_by("-date")
-    
-    
+
+
 class EventView(generic.DetailView):
     model = Event
     template_name = "events/event_detail.html"
@@ -37,6 +37,7 @@ class PizzaSlicesDeleteView(DeleteView):
         else:
             return "/events"
 
+
 def create_pizza_order(request, pk):
     if request.method == 'POST':
         form = PizzaOrderForm(request.POST)
@@ -48,6 +49,7 @@ def create_pizza_order(request, pk):
         form = PizzaOrderForm(data)
     return render(request, 'events/create_pizza_order.html', {'form': form, 'pk': pk})
 
+
 def claim_slices(request, pk):
     if request.method == 'POST':
         form = PizzaSlicesForm(request.POST)
@@ -55,6 +57,5 @@ def claim_slices(request, pk):
             form.save()
             return HttpResponseRedirect(request.POST.get('next', '/'))
     else:
-        data = {'pizza_order': PizzaOrder.objects.get(pk=pk)}
-        form = PizzaSlicesForm(data)
+        form = PizzaSlicesForm(initial={'pizza_order': PizzaOrder.objects.get(pk=pk)})
     return render(request, 'events/claim_slices.html', {'form': form})

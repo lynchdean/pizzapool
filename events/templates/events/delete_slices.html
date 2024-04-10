@@ -2,10 +2,19 @@
 {% extends "./main_template.html" %}
 
 {% block content %}
-<form method="post">{% csrf_token %}
-    <p>Are you sure you want to remove {{ object }}'s slices from the order?</p>
-    <p>Please only do this if you have permission from {{ object }} or are the person making the order. </p>
-    <input type="hidden" name="next" value="{{ request.GET.next }}">
-    <input type="submit" value="Confirm">
-</form>
+<div class="container p-3">
+
+    <div class="alert alert-danger" role="alert">
+        <form method="post">{% csrf_token %}
+            <p>Are you sure you want to remove {{ object }}'s slices from the order?</p>
+            <p>Please do not continue unless you have permission from {{ object }} or are the person making the
+                order. </p>
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+            <div class="text-center">
+                <button class="btn btn-danger" type="submit">Confirm</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 {% endblock %}
