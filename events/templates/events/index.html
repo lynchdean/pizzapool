@@ -9,6 +9,8 @@
     {% endfor %}
     </ul>
 {% else %}
-    <p>There are currently no events.</p>
+    <div class="alert alert-secondary" role="alert">
+        There are currently no events.
+    </div>
 {% endif %}
 {% endblock %}
