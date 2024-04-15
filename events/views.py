@@ -22,7 +22,6 @@ class EventView(generic.DetailView):
         context = super().get_context_data(**kwargs)
         pizza_orders = PizzaOrder.objects.filter(event=self.object)
         context['pizza_orders'] = pizza_orders
-        context['slices'] = PizzaSlices.objects.filter(pizza_order__in=pizza_orders)
         return context
 
 

@@ -25,48 +25,49 @@
                     <h5 class="card-title">{{ pizza_order.purchaser_name }}</h5>
                 </div>
                 <div class="col text-end">
-                    <h5 class="text-body-secondary">{{ pizza_order.pizza_type }}</h5>
+                    <h5 class="card-title">{{ pizza_order.pizza_type }}</h5>
                 </div>
             </div>
-            <div class="row">
-                <div class="col ">
-                    <p>Revolut: {{ pizza_order.purchaser_revolut }}</p>
+            <div class="row text-muted">
+                <div class="col">
+                    <small class="mb-0">Revolut: {{ pizza_order.purchaser_revolut }}</small>
                 </div>
                 <div class="col text-end">
-                    <p>Slices: {{ pizza_order.available_slices }} @ €{{ pizza_order.price_per_slice|floatformat:2 }}</p>
+                    <small class="mb-0">Slices: {{ pizza_order.available_slices }} @ €{{ pizza_order.price_per_slice|floatformat:2 }}</small>
                 </div>
             </div>
+            <div class="row text-muted mb-3">
+                <small>WhatsApp: {{ pizza_order.purchaser_whatsapp }}</small>
+            </div>
             <div class="container pb-3">
-                {% for slice in slices %}
-                {% if slice.pizza_order == pizza_order %}
-                {% if forloop.counter == 1 %}
-                <div class="row small text-uppercase text-secondary mb-2">
-                    <div class="col">
-                        Name
+                {% for slice in pizza_order.matched_slices %}
+                    {% if forloop.first %}
+                        <div class="row small text-uppercase text-secondary mb-2">
+                            <div class="col">
+                                Name
+                            </div>
+                            <div class="col">
+                                WhatsApp
+                            </div>
+                            <div class="col text-end">
+                                Slices
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="row mb-2">
+                        <div class="col-4">
+                            {{ slice.buyer_name }}
+                        </div>
+                        <div class="col-6">
+                            {{ slice.buyer_whatsapp }}
+                        </div>
+                        <div class="col-2 text-end">
+                            x{{ slice.number_of_slices }}
+                            <a class="btn-close m-2"
+                               href="{% url 'events:delete-slices' slice.id %}?next={{ request.path|urlencode }}"
+                               aria-label="Close"></a>
+                        </div>
                     </div>
-                    <div class="col">
-                        WhatsApp
-                    </div>
-                    <div class="col text-end">
-                        Slices
-                    </div>
-                </div>
-                {% endif %}
-                <div class="row mb-2">
-                    <div class="col">
-                        {{ slice.buyer_name }}
-                    </div>
-                    <div class="col">
-                        {{ slice.buyer_whatsapp }}
-                    </div>
-                    <div class="col text-end">
-                        x{{ slice.number_of_slices }}
-                        <a class="btn-close m-2"
-                           href="{% url 'events:delete-slices' slice.id %}?next={{ request.path|urlencode }}"
-                           aria-label="Close"></a>
-                    </div>
-                </div>
-                {% endif %}
                 {% endfor %}
             </div>
 

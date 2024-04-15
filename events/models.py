@@ -6,6 +6,7 @@ from django.db.models import Sum
 from django.forms import ModelForm
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Event(models.Model):
@@ -22,7 +23,7 @@ class Event(models.Model):
 class PizzaOrder(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     purchaser_name = models.CharField("Name", max_length=50)
-    purchaser_whatsapp = models.CharField("WhatsApp", max_length=50)
+    purchaser_whatsapp = PhoneNumberField("WhatsApp", null=False, blank=False)
     purchaser_revolut = models.CharField("Revolut", max_length=50)
     pizza_type = models.CharField(max_length=100)
     price_per_slice = models.DecimalField("Price per slice", max_digits=4, decimal_places=2)
@@ -53,7 +54,7 @@ class PizzaOrder(models.Model):
 class PizzaSlices(models.Model):
     pizza_order = models.ForeignKey(PizzaOrder, on_delete=models.CASCADE)
     buyer_name = models.CharField("Name", max_length=50)
-    buyer_whatsapp = models.CharField("WhatsApp", max_length=50)
+    buyer_whatsapp = PhoneNumberField("WhatsApp", null=False, blank=False)
     number_of_slices = models.PositiveIntegerField(default=1, validators=[
         MinValueValidator(1),
         MaxValueValidator(8)])

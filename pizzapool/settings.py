@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'bootstrap5',
     'crispy_forms',
     'crispy_bootstrap5',
+    "phonenumber_field",
 ]
 
 MIDDLEWARE = [
@@ -129,3 +130,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+PHONENUMBER_DEFAULT_FORMAT = "INTERNATIONAL"
+
+PHONENUMBER_DEFAULT_REGION = 'IE'
