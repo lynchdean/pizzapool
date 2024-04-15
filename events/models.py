@@ -76,6 +76,11 @@ class PizzaOrderForm(ModelForm):
         model = PizzaOrder
         fields = '__all__'
         widgets = {'event': forms.HiddenInput()}
+        error_messages = {
+            'purchaser_whatsapp': {
+                'invalid': "Enter a valid phone number (e.g. 087 123 4567) or a number with an international call prefix.",
+            },
+        }
 
 
 class PizzaSlicesForm(ModelForm):
