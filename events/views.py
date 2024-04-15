@@ -44,8 +44,7 @@ def create_pizza_order(request, pk):
             form.save()
             return HttpResponseRedirect(request.POST.get('next', '/'))
     else:
-        data = {'event': Event.objects.get(pk=pk)}
-        form = PizzaOrderForm(data)
+        form = PizzaOrderForm(initial={'event': Event.objects.get(pk=pk)})
     return render(request, 'events/create_pizza_order.html', {'form': form, 'pk': pk})
 
 
