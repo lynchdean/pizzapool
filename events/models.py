@@ -5,8 +5,10 @@ from django import forms
 from django.db.models import Sum
 from django.forms import ModelForm
 from django.contrib.auth.models import User
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 from phonenumber_field.modelfields import PhoneNumberField
+
+alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')
 
 
 class Event(models.Model):
@@ -24,7 +26,7 @@ class PizzaOrder(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     purchaser_name = models.CharField("Name", max_length=50)
     purchaser_whatsapp = PhoneNumberField("WhatsApp", null=False, blank=False)
-    purchaser_revolut = models.CharField("Revolut", max_length=50)
+    purchaser_revolut = models.CharField("Revolut username", max_length=16, validators=[alphanumeric])
     pizza_type = models.CharField(max_length=100)
     price_per_slice = models.DecimalField("Price per slice", max_digits=4, decimal_places=2)
     available_slices = models.PositiveIntegerField(default=1, validators=[
