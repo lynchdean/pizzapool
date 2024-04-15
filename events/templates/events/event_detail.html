@@ -33,7 +33,7 @@
                     <p>Revolut: {{ pizza_order.purchaser_revolut }}</p>
                 </div>
                 <div class="col text-end">
-                    <p>Slices: {{ pizza_order.available_slices }} @ €{{ pizza_order.price_per_slice }}</p>
+                    <p>Slices: {{ pizza_order.available_slices }} @ €{{ pizza_order.price_per_slice|floatformat:2 }}</p>
                 </div>
             </div>
             <div class="container pb-3">

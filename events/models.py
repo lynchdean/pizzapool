@@ -25,13 +25,13 @@ class PizzaOrder(models.Model):
     purchaser_whatsapp = models.CharField("WhatsApp", max_length=50)
     purchaser_revolut = models.CharField("Revolut", max_length=50)
     pizza_type = models.CharField(max_length=100)
-    price_per_slice = models.FloatField("Price per slice")
+    price_per_slice = models.DecimalField("Price per slice", max_digits=4, decimal_places=2)
     available_slices = models.PositiveIntegerField(default=1, validators=[
         MinValueValidator(1),
         MaxValueValidator(8)])
 
     def __str__(self) -> str:
-        return f"{self.purchaser_name} - {self.pizza_type}"
+        return f"{self.purchaser_name} - {self.pizza_type}, Event: {self.event}"
 
     def matched_slices(self):
         """Returns PizzaSlices linked with this order, returns None if no slices are linked"""
