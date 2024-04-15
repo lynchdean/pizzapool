@@ -37,7 +37,7 @@
                 </div>
             </div>
             <div class="row text-muted mb-3">
-                <label class="small">WhatsApp: {{ pizza_order.purchaser_whatsapp }}</label>
+                <small>WhatsApp: {{ pizza_order.purchaser_whatsapp }}</small>
             </div>
             <div class="container pb-3">
                 {% for slice in pizza_order.matched_slices %}
@@ -59,7 +59,7 @@
                             {{ slice.buyer_name }}
                         </div>
                         <div class="col-6">
-                            <label>{{ slice.buyer_whatsapp }}</label>
+                            {{ slice.buyer_whatsapp }}
                         </div>
                         <div class="col-2 text-end">
                             x{{ slice.number_of_slices }}
