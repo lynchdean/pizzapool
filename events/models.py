@@ -88,6 +88,11 @@ class PizzaSlicesForm(ModelForm):
         model = PizzaSlices
         fields = "__all__"
         widgets = {'pizza_order': forms.HiddenInput()}
+        error_messages = {
+            'buyer_whatsapp': {
+                'invalid': "Enter a valid phone number (e.g. 087 123 4567) or a number with an international call prefix.",
+            },
+        }
 
     def __init__(self, *args, **kwargs):
         super(PizzaSlicesForm, self).__init__(*args, **kwargs)
