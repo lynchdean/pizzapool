@@ -37,7 +37,7 @@ class PizzaOrder(models.Model):
         return f"{self.purchaser_name} - {self.pizza_type}, Event: {self.event}"
 
     def matched_slices(self):
-        """Returns PizzaSlices linked with this order, returns None if no slices are linked"""
+        """Returns PizzaSlices linked with this order, returns empty queryset if no slices are linked"""
         return PizzaSlices.objects.filter(pizza_order=self.id)
 
     def get_total_claimed(self) -> int:
