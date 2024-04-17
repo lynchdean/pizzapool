@@ -44,5 +44,81 @@ class PizzaOrderModelTests(TestCase):
         matched_slices() returns queryset if there are slices linked to the order.
         :return:
         """
-        new_slice = create_slices(pizza_order=self.order)
+        create_slices(pizza_order=self.order)
         self.assertTrue(self.order.matched_slices().exists())
+
+    def test_matched_slices_returns_correct_amount(self):
+        """
+        matched_slices() returns the correct number of PizzaSlices objects.
+        :return:
+        """
+        for i in range(3):
+            create_slices(pizza_order=self.order)
+        self.assertTrue(self.order.matched_slices().count() == 3)
+
+    def test_matched_slices_returns_correct_amount_if_slices_deleted(self):
+        """
+        matched_slices() returns the correct number of PizzaSlices objects after some slices have been deleted.
+        :return:
+        """
+        create_slices(pizza_order=self.order, number_of_slices=3)
+        slices = create_slices(pizza_order=self.order, number_of_slices=2)
+        self.assertTrue(self.order.matched_slices().count() == 2)
+        slices.delete()
+        self.assertTrue(self.order.matched_slices().count() == 1)
+
+    def test_get_total_claimed_returns_zero_if_no_slices(self):
+        """
+        get_total_claimed() returns 0 if there are no PizzaSlices linked to the order.
+        :return:
+        """
+        self.assertTrue(self.order.get_total_claimed() == 0)
+
+    def test_get_total_claimed_returns_correct_total(self):
+        """
+        get_total_claimed() returns the correct number of total slices
+        :return:
+        """
+        create_slices(pizza_order=self.order, number_of_slices=1)
+        create_slices(pizza_order=self.order, number_of_slices=2)
+        self.assertTrue(self.order.get_total_claimed() == 3)
+
+    def test_get_total_claimed_returns_correct_total_if_slices_deleted(self):
+        """
+        get_total_claimed() returns the correct number of total slices after some slices have been deleted,
+        :return:
+        """
+        create_slices(pizza_order=self.order, number_of_slices=1)
+        slices = create_slices(pizza_order=self.order, number_of_slices=2)
+        self.assertTrue(self.order.get_total_claimed() == 3)
+        slices.delete()
+        self.assertTrue(self.order.get_total_claimed() == 1)
+
+    def test_get_total_claimed_returns_correct_total_if_slices_edited(self):
+        """
+        get_total_claimed() returns the correct number of total slices after some slices have been edited.
+        :return:
+        """
+        create_slices(pizza_order=self.order, number_of_slices=1)
+        slices = create_slices(pizza_order=self.order, number_of_slices=2)
+        self.assertTrue(self.order.get_total_claimed() == 3)
+        slices.number_of_slices = 1
+        slices.save()
+        self.assertTrue(self.order.get_total_claimed() == 2)
+
+    def test_get_total_remaining_returns_correct_total_if_none_claimed(self):
+        """
+        get_total_remaining() matches available_slices if no slices are linked.
+        :return:
+        """
+        self.assertEqual(self.order.get_total_remaining(), self.order.available_slices)
+
+    def test_get_total_remaining_returns_correct_total(self):
+        """
+        get_total_remaining() returns correct total if some slices are linked.
+        :return:
+        """
+        create_slices(pizza_order=self.order, number_of_slices=3)
+        self.assertTrue(self.order.get_total_remaining() == 4)
+        create_slices(pizza_order=self.order, number_of_slices=4)
+        self.assertTrue(self.order.get_total_remaining() == 0)
