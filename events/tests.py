@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils import timezone
 
@@ -119,3 +120,22 @@ class PizzaOrderModelTests(TestCase):
         self.assertTrue(self.order.get_total_remaining() == 4)
         create_slices(pizza_order=self.order, number_of_slices=4)
         self.assertTrue(self.order.get_total_remaining() == 0)
+
+    def test_event_is_locked(self):
+        """
+        event_is_locked returns True if locked and False if not.
+        :return:
+        """
+        self.event.locked = False
+        self.assertFalse(self.order.event_is_locked())
+        self.event.locked = True
+        self.assertTrue(self.order.event_is_locked())
+
+    def test_save_fails_if_event_locked(self):
+        """
+        save() throws Validation error if event is locked
+        :return:
+        """
+        self.event.locked = True
+        with self.assertRaisesRegex(ValidationError, "locked"):
+            self.order.save()
