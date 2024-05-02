@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from django.test import TestCase
 from django.utils import timezone
 
@@ -27,7 +26,6 @@ class PizzaOrderModelTests(TestCase):
         self.order = create_order(event=self.event)
 
     def tearDown(self):
-        self.user.delete()
         self.event.delete()
         self.order.delete()
 
