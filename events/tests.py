@@ -5,8 +5,8 @@ from django.utils import timezone
 from .models import Event, PizzaOrder, PizzaSlices
 
 
-def create_event(host, event_title="Test Event", date=timezone.now(), description="desc"):
-    return Event.objects.create(event_title=event_title, date=date, description=description, host=host)
+def create_event(event_title="Test Event", date=timezone.now(), description="desc"):
+    return Event.objects.create(event_title=event_title, date=date, description=description)
 
 
 def create_order(event, purchaser_name="Bob", purchaser_whatsapp="0879876543", purchaser_revolut="BobRev",
@@ -23,8 +23,7 @@ def create_slices(pizza_order, buyer_name="John", buyer_whatsapp="0871234567", n
 
 class PizzaOrderModelTests(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='testuser', password='12345')
-        self.event = create_event(host=self.user)
+        self.event = create_event()
         self.order = create_order(event=self.event)
 
     def tearDown(self):
