@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="container p-3">
-
+    {% if not object.pizza_order.event_is_locked %}
     <div class="alert alert-danger" role="alert">
         <form method="post">{% csrf_token %}
             <p>Are you sure you want to remove {{ object }}'s slices from the order?</p>
@@ -15,6 +15,10 @@
             </div>
         </form>
     </div>
+    {% else %}
+    <div class="alert alert-warning" role="alert">
+        Event is locked.
+    </div>
+    {% endif %}
 </div>
-
 {% endblock %}

@@ -1,10 +1,10 @@
 import uuid
 
+from django.core.exceptions import ValidationError
 from django.db import models
 from django import forms
 from django.db.models import Sum
 from django.forms import ModelForm
-from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -16,10 +16,10 @@ class Event(models.Model):
     event_title = models.CharField(max_length=100)
     date = models.DateTimeField("date of event")
     description = models.CharField(max_length=200)
-    host = models.ForeignKey(User, on_delete=models.CASCADE)
+    locked = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.event_title} - {self.date}"
+        return f"{'[LOCKED]' if self.locked else ''}{self.event_title} - {self.date}"
 
 
 class PizzaOrder(models.Model):
@@ -52,6 +52,14 @@ class PizzaOrder(models.Model):
         """Returns the number of slices that have not been claimed from the order"""
         return self.available_slices - self.get_total_claimed()
 
+    def event_is_locked(self):
+        return self.event.locked
+
+    def save(self, *args, **kwargs):
+        if self.event_is_locked():
+            raise ValidationError("Event is locked", code="locked")
+        super(PizzaOrder, self).save(*args, **kwargs)
+
 
 class PizzaSlices(models.Model):
     pizza_order = models.ForeignKey(PizzaOrder, on_delete=models.CASCADE)
@@ -66,9 +74,11 @@ class PizzaSlices(models.Model):
 
     def save(self, *args, **kwargs):
         if self.id is None:
-            if self.number_of_slices > self.pizza_order.get_total_remaining():
-                return False
-        return super(PizzaSlices, self).save(*args, **kwargs)
+            if self.pizza_order.event_is_locked():
+                raise ValidationError("Event is locked", code="locked")
+            elif self.number_of_slices > self.pizza_order.get_total_remaining():
+                raise ValidationError("Insufficient remaining slices", code="insufficient_slices")
+        super(PizzaSlices, self).save(*args, **kwargs)
 
 
 class PizzaOrderForm(ModelForm):
