@@ -59,9 +59,3 @@ def claim_slices(request, pk):
         pizza_order = PizzaOrder.objects.get(pk=pk)
         form = PizzaSlicesForm(initial={'pizza_order': pizza_order})
     return render(request, 'events/claim_slices.html', {'form': form, 'pizza_order': pizza_order})
-
-
-
-
-
-# <!--        {% endif %}-->
