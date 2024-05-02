@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils import timezone
 
@@ -119,3 +120,61 @@ class PizzaOrderModelTests(TestCase):
         self.assertTrue(self.order.get_total_remaining() == 4)
         create_slices(pizza_order=self.order, number_of_slices=4)
         self.assertTrue(self.order.get_total_remaining() == 0)
+
+    def test_event_is_locked(self):
+        """
+        event_is_locked returns True if locked and False if not.
+        :return:
+        """
+        self.event.locked = False
+        self.assertFalse(self.order.event_is_locked())
+        self.event.locked = True
+        self.assertTrue(self.order.event_is_locked())
+
+    def test_order_save_fails_if_event_locked(self):
+        """
+        save() throws Validation error if event is locked.
+        :return:
+        """
+        self.event.locked = True
+        with self.assertRaisesRegex(ValidationError, "locked"):
+            self.order.save()
+
+
+class PizzaSlicesModelTests(TestCase):
+    def setUp(self):
+        self.event = create_event()
+        self.order = create_order(event=self.event)
+
+    def tearDown(self):
+        self.event.delete()
+        self.order.delete()
+
+    def test_create_slices_fails_if_event_locked(self):
+        """
+        save() throws Validation error if event is locked.
+        :return:
+        """
+        self.event.locked = True
+        with self.assertRaisesRegex(ValidationError, "locked"):
+            create_slices(pizza_order=self.order)
+
+    def test_create_slices_fails_if_order_is_full(self):
+        """
+        save() throws Validation error if order is full.
+        :return:
+        """
+        available = self.order.get_total_remaining()
+        create_slices(pizza_order=self.order, number_of_slices=available)
+        with self.assertRaisesRegex(ValidationError, "Insufficient"):
+            create_slices(pizza_order=self.order, number_of_slices=1)
+
+    def test_create_slices_fails_if_order_doesnt_have_enough_slices(self):
+        """
+        save() throws Validation error if order doesn't have a sufficient number of slices remaining.
+        :return:
+        """
+        available = self.order.get_total_remaining()
+        create_slices(pizza_order=self.order, number_of_slices=available - 1)
+        with self.assertRaisesRegex(ValidationError, "Insufficient"):
+            create_slices(pizza_order=self.order, number_of_slices=2)

@@ -76,7 +76,7 @@ class PizzaSlices(models.Model):
         if self.id is None:
             if self.pizza_order.event_is_locked():
                 raise ValidationError("Event is locked", code="locked")
-            elif self.number_of_slices > self.pizza_order.get_total_remaining():
+            if self.number_of_slices > self.pizza_order.get_total_remaining():
                 raise ValidationError("Insufficient remaining slices", code="insufficient_slices")
         super(PizzaSlices, self).save(*args, **kwargs)
 
