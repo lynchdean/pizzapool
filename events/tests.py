@@ -175,6 +175,6 @@ class PizzaSlicesModelTests(TestCase):
         :return:
         """
         available = self.order.get_total_remaining()
-        create_slices(pizza_order=self.order, number_of_slices=available-1)
+        create_slices(pizza_order=self.order, number_of_slices=available - 1)
         with self.assertRaisesRegex(ValidationError, "Insufficient"):
             create_slices(pizza_order=self.order, number_of_slices=2)
