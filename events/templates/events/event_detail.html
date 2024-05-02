@@ -63,9 +63,11 @@
                         </div>
                         <div class="col-2 text-end">
                             x{{ slice.number_of_slices }}
+                            {% if not pizza_order.event_is_locked %}
                             <a class="btn-close m-2"
                                href="{% url 'events:delete-slices' slice.id %}?next={{ request.path|urlencode }}"
                                aria-label="Close"></a>
+                            {% endif  %}
                         </div>
                     </div>
                 {% endfor %}
@@ -81,12 +83,14 @@
             </div>
 
             <div class="d-grid ">
-                {% if pizza_order.get_total_remaining > 0 %}
-                <a class="btn btn-outline-success text-center" role="button"
-                   href="{% url 'events:claim-slices' pizza_order.id %}?next={{ request.path|urlencode }}">Join
-                    Order</a>
+                {% if pizza_order.event_is_locked %}
+                    <a class="btn btn-outline-success text-center disabled" role="button" href="">Event Locked</a>
+                {% elif pizza_order.get_total_remaining > 0 %}
+                    <a class="btn btn-outline-success text-center" role="button"
+                       href="{% url 'events:claim-slices' pizza_order.id %}?next={{ request.path|urlencode }}">
+                        Join Order</a>
                 {% else %}
-                <a class="btn btn-outline-success text-center disabled" role="button" href="">Order Full</a>
+                    <a class="btn btn-outline-success text-center disabled" role="button" href="">Order Full</a>
                 {% endif  %}
             </div>
         </div>
@@ -100,9 +104,13 @@
     {% endif %}
 
     <div class="d-grid">
-        <a class="btn btn-success text-center" role="button"
-           href="{% url 'events:create-pizza-order' event.id %}?next={{ request.path|urlencode }}">Start a new pizza
-            order</a>
+            {% if event.locked %}
+                <a class="btn btn-success text-center disabled" role="button" href="">Event Locked</a>
+            {% else %}
+            <a class="btn btn-success text-center" role="button"
+               href="{% url 'events:create-pizza-order' event.id %}?next={{ request.path|urlencode }}">Start a new pizza
+                order</a>
+            {% endif %}
     </div>
 </div>
 {% endblock %}

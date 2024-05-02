@@ -4,21 +4,27 @@
 {% block content %}
 <div class="container p-3">
     <h3>Join Order:</h3>
-    <div class="alert alert-warning small" role="alert">
-        Please be vigilant when joining an order and sending money via revolut, especially with a person unknown to you.
-    </div>
-    <div class="card">
-        <div class="card-body">
-            {% load crispy_forms_tags %}
-            <form method="post" class="my-class">
-                {% csrf_token %}
-                {{ form|crispy }}
-                <input type="hidden" name="next" value="{{ request.GET.next }}">
-                <div class="d-grid">
-                    <button class="btn btn-success" type="submit">Confirm</button>
-                </div>
-            </form>
+    {% if not pizza_order.event_is_locked %}
+        <div class="alert alert-warning small" role="alert">
+            Please be vigilant when joining an order and sending money via revolut, especially with a person unknown to you.
         </div>
+        <div class="card">
+            <div class="card-body">
+                {% load crispy_forms_tags %}
+                <form method="post" class="my-class">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <input type="hidden" name="next" value="{{ request.GET.next }}">
+                    <div class="d-grid">
+                        <button class="btn btn-success" type="submit">Confirm</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% else %}
+    <div class="alert alert-warning" role="alert">
+        Event is locked.
     </div>
+    {% endif %}
 </div>
 {% endblock %}

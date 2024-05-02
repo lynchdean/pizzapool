@@ -3,11 +3,8 @@
 
 {% block content %}
 <div class="container p-3">
+    {% if not event.locked %}
     <h3>New Pizza Order:</h3>
-<!--    <div class="alert alert-warning small" role="alert">-->
-<!--        This form is not a pre-order. You must still contact the restaurant to make a pre-order for the arranged time.-->
-<!--    </div>-->
-    <div class="form-text mb-2">  </div>
     <div class="card">
         <div class="card-body">
             {% load crispy_forms_tags %}
@@ -23,5 +20,10 @@
             </form>
         </div>
     </div>
+    {% else %}
+    <div class="alert alert-warning" role="alert">
+        Event is locked.
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
