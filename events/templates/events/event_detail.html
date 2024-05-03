@@ -33,7 +33,8 @@
                     <small class="mb-0">Revolut: {{ pizza_order.purchaser_revolut }}</small>
                 </div>
                 <div class="col text-end">
-                    <small class="mb-0">Slices: {{ pizza_order.available_slices }} @ €{{ pizza_order.price_per_slice|floatformat:2 }}</small>
+                    <small class="mb-0">Slices: {{ pizza_order.available_slices }} @
+                        €{{pizza_order.price_per_slice|floatformat:2 }}</small>
                 </div>
             </div>
             <div class="row text-muted mb-3">
@@ -41,35 +42,35 @@
             </div>
             <div class="container pb-3">
                 {% for slice in pizza_order.matched_slices %}
-                    {% if forloop.first %}
-                        <div class="row small text-uppercase text-secondary mb-2">
-                            <div class="col">
-                                Name
-                            </div>
-                            <div class="col">
-                                WhatsApp
-                            </div>
-                            <div class="col text-end">
-                                Slices
-                            </div>
-                        </div>
-                    {% endif %}
-                    <div class="row small mb-2">
-                        <div class="col-4">
-                            {{ slice.buyer_name }}
-                        </div>
-                        <div class="col-6">
-                            {{ slice.buyer_whatsapp }}
-                        </div>
-                        <div class="col-2 text-end">
-                            x{{ slice.number_of_slices }}
-                            {% if not pizza_order.event_is_locked %}
-                            <a class="btn-close m-2"
-                               href="{% url 'events:delete-slices' slice.id %}?next={{ request.path|urlencode }}"
-                               aria-label="Close"></a>
-                            {% endif  %}
-                        </div>
+                {% if forloop.first %}
+                <div class="row small text-uppercase text-secondary mb-2">
+                    <div class="col">
+                        Name
                     </div>
+                    <div class="col">
+                        WhatsApp
+                    </div>
+                    <div class="col text-end">
+                        Slices
+                    </div>
+                </div>
+                {% endif %}
+                <div class="row small mb-2">
+                    <div class="col-4">
+                        {{ slice.buyer_name }}
+                    </div>
+                    <div class="col-6">
+                        {{ slice.buyer_whatsapp }}
+                    </div>
+                    <div class="col-2 text-end">
+                        x{{ slice.number_of_slices }}
+                        {% if not pizza_order.event_is_locked %}
+                        <a aria-label="Close"
+                           class="btn-close m-2"
+                           href="{% url 'events:delete-slices' slice.id %}?next={{ request.path|urlencode }}"></a>
+                        {% endif %}
+                    </div>
+                </div>
                 {% endfor %}
             </div>
 
@@ -84,14 +85,15 @@
 
             <div class="d-grid ">
                 {% if pizza_order.event_is_locked %}
-                    <a class="btn btn-outline-success text-center disabled" role="button" href="">Event Locked</a>
+                <a class="btn btn-outline-success text-center disabled" href="" role="button">Event Locked</a>
                 {% elif pizza_order.get_total_remaining > 0 %}
-                    <a class="btn btn-outline-success text-center" role="button"
-                       href="{% url 'events:claim-slices' pizza_order.id %}?next={{ request.path|urlencode }}">
-                        Join Order</a>
+                <a class="btn btn-outline-success text-center"
+                   href="{% url 'events:claim-slices' pizza_order.id %}?next={{ request.path|urlencode }}"
+                   role="button">
+                    Join Order</a>
                 {% else %}
-                    <a class="btn btn-outline-success text-center disabled" role="button" href="">Order Full</a>
-                {% endif  %}
+                <a class="btn btn-outline-success text-center disabled" href="" role="button">Order Full</a>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -104,13 +106,14 @@
     {% endif %}
 
     <div class="d-grid">
-            {% if event.locked %}
-                <a class="btn btn-success text-center disabled" role="button" href="">Event Locked</a>
-            {% else %}
-            <a class="btn btn-success text-center" role="button"
-               href="{% url 'events:create-pizza-order' event.id %}?next={{ request.path|urlencode }}">Start a new pizza
-                order</a>
-            {% endif %}
+        {% if event.locked %}
+        <a class="btn btn-success text-center disabled" href="" role="button">Event Locked</a>
+        {% else %}
+        <a class="btn btn-success text-center"
+           href="{% url 'events:create-pizza-order' event.id %}?next={{ request.path|urlencode }}" id="create-order-btn"
+           role="button">Start a new pizza
+            order</a>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

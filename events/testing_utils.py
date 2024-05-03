@@ -3,8 +3,8 @@ from django.utils import timezone
 from .models import Event, PizzaOrder, PizzaSlices
 
 
-def create_event(event_title="Test Event", date=timezone.now(), description="desc"):
-    return Event.objects.create(event_title=event_title, date=date, description=description)
+def create_event(event_title="Test Event", date=timezone.now(), description="desc", locked=False):
+    return Event.objects.create(event_title=event_title, date=date, description=description, locked=locked)
 
 
 def create_order(event, purchaser_name="Bob", purchaser_whatsapp="0879876543", purchaser_revolut="BobRev",
