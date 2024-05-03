@@ -2,10 +2,11 @@ import time
 from decimal import Decimal
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from selenium.webdriver import ActionChains
 
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.webdriver import WebDriver
-from selenium.webdriver.firefox.options import Options
 
 from .models import PizzaOrder
 from .testing_utils import create_event, create_order, create_slices
@@ -17,7 +18,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
         super().setUpClass()
         options = Options()
         options.add_argument("--headless")
-        cls.selenium = WebDriver(options=options)
+        cls.selenium = webdriver.Chrome(options=options)
         cls.selenium.implicitly_wait(10)
 
     @classmethod
@@ -56,6 +57,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
         slices.clear()
         slices.send_keys("7")
         confirm_btn = self.selenium.find_element(By.ID, "confirm-order-btn")
+        ActionChains(self.selenium).move_to_element(confirm_btn).perform()
         confirm_btn.click()
 
         # Check order is created in database
