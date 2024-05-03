@@ -67,7 +67,8 @@
                         {% if not pizza_order.event_is_locked %}
                         <a aria-label="Close"
                            class="btn-close m-2"
-                           href="{% url 'events:delete-slices' slice.id %}?next={{ request.path|urlencode }}"></a>
+                           href="{% url 'events:delete-slices' slice.id %}?next={{ request.path|urlencode }}"
+                           id="remove-slices"></a>
                         {% endif %}
                     </div>
                 </div>
@@ -89,6 +90,7 @@
                 {% elif pizza_order.get_total_remaining > 0 %}
                 <a class="btn btn-outline-success text-center"
                    href="{% url 'events:claim-slices' pizza_order.id %}?next={{ request.path|urlencode }}"
+                   id="join-order-btn"
                    role="button">
                     Join Order</a>
                 {% else %}
