@@ -9,9 +9,9 @@
             <p>Are you sure you want to remove {{ object }}'s slices from the order?</p>
             <p>Please do not continue unless you have permission from {{ object }} or are the person making the
                 order. </p>
-            <input type="hidden" name="next" value="{{ request.GET.next }}">
+            <input name="next" type="hidden" value="{{ request.GET.next }}">
             <div class="text-center">
-                <button class="btn btn-danger" type="submit">Confirm</button>
+                <button class="btn btn-danger" id="confirm-remove-slices-btn" type="submit">Confirm</button>
             </div>
         </form>
     </div>
