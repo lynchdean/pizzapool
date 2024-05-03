@@ -86,7 +86,8 @@
 
             <div class="d-grid ">
                 {% if pizza_order.event_is_locked %}
-                <a class="btn btn-outline-success text-center disabled" href="" role="button">Event Locked</a>
+                <a class="btn btn-outline-success text-center disabled" href="" id="new-slices-locked" role="button">Event
+                    Locked</a>
                 {% elif pizza_order.get_total_remaining > 0 %}
                 <a class="btn btn-outline-success text-center"
                    href="{% url 'events:claim-slices' pizza_order.id %}?next={{ request.path|urlencode }}"
@@ -94,7 +95,8 @@
                    role="button">
                     Join Order</a>
                 {% else %}
-                <a class="btn btn-outline-success text-center disabled" href="" role="button">Order Full</a>
+                <a class="btn btn-outline-success text-center disabled" href="" id="order-full" role="button">Order
+                    Full</a>
                 {% endif %}
             </div>
         </div>
@@ -109,7 +111,7 @@
 
     <div class="d-grid">
         {% if event.locked %}
-        <a class="btn btn-success text-center disabled" href="" role="button">Event Locked</a>
+        <a class="btn btn-success text-center disabled" href="" id="new-orders-locked" role="button">Event Locked</a>
         {% else %}
         <a class="btn btn-success text-center"
            href="{% url 'events:create-pizza-order' event.id %}?next={{ request.path|urlencode }}" id="create-order-btn"

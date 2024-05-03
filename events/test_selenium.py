@@ -2,6 +2,7 @@ import time
 from decimal import Decimal
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from selenium.common import NoSuchElementException
 from selenium.webdriver import ActionChains
 
 from selenium import webdriver
@@ -126,3 +127,30 @@ class MySeleniumTests(StaticLiveServerTestCase):
 
         # Check slices are deleted from order
         self.assertTrue(PizzaSlices.objects.filter(pizza_order=order).count() == 0)
+
+    def test_cant_join_order_if_full(self):
+        order = create_order(event=self.event, available_slices=1)
+
+        # Event page
+        self.selenium.get(f'{self.live_server_url}/events/{self.event.id}/')
+        self.assertTrue(len(self.selenium.find_elements(By.ID, "join-order-btn")) > 0)
+
+        # Add slices to fill order
+        create_slices(pizza_order=order, number_of_slices=1)
+        self.selenium.refresh()
+
+        # Check Order full is now showing and not join order button
+        self.assertTrue(len(self.selenium.find_elements(By.ID, "order-full")) > 0)
+        self.assertTrue(len(self.selenium.find_elements(By.ID, "join-order-btn")) == 0)
+
+    def test_buttons_disabled_if_locked(self):
+        order = create_order(event=self.event)
+        create_slices(pizza_order=order)
+        self.event.locked = True
+        self.event.save()
+
+        # Event page
+        self.selenium.get(f'{self.live_server_url}/events/{self.event.id}/')
+        self.assertTrue(len(self.selenium.find_elements(By.ID, "new-orders-locked")) > 0)
+        self.assertTrue(len(self.selenium.find_elements(By.ID, "new-slices-locked")) > 0)
+        self.assertTrue(len(self.selenium.find_elements(By.ID, "remove-slices")) == 0)

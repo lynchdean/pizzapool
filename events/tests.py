@@ -1,8 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
-from django.utils import timezone
 
-from .models import Event, PizzaOrder, PizzaSlices
 from .testing_utils import create_event, create_order, create_slices
 
 
@@ -35,7 +33,7 @@ class PizzaOrderModelTests(TestCase):
         matched_slices() returns the correct number of PizzaSlices objects.
         :return:
         """
-        for i in range(3):
+        for _ in range(3):
             create_slices(pizza_order=self.order)
         self.assertTrue(self.order.matched_slices().count() == 3)
 
