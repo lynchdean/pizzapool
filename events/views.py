@@ -38,24 +38,24 @@ class PizzaSlicesDeleteView(DeleteView):
 
 
 def create_pizza_order(request, pk):
+    event = Event.objects.get(pk=pk)
     if request.method == 'POST':
         form = PizzaOrderForm(request.POST)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(request.POST.get('next', '/'))
     else:
-        event = Event.objects.get(pk=pk)
         form = PizzaOrderForm(initial={'event': event})
     return render(request, 'events/create_pizza_order.html', {'form': form, 'event': event})
 
 
 def claim_slices(request, pk):
+    pizza_order = PizzaOrder.objects.get(pk=pk)
     if request.method == 'POST':
         form = PizzaSlicesForm(request.POST)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(request.POST.get('next', '/'))
     else:
-        pizza_order = PizzaOrder.objects.get(pk=pk)
         form = PizzaSlicesForm(initial={'pizza_order': pizza_order})
     return render(request, 'events/claim_slices.html', {'form': form, 'pizza_order': pizza_order})
