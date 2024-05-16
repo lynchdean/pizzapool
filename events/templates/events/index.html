@@ -4,15 +4,19 @@
 {% block content %}
 <div class="container p-3">
     {% if events_list %}
-        <ul>
+    <ul class="list-group">
         {% for event in events_list %}
-            <li><a href="{% url 'events:event' event.id %}">{{ event.event_title }} - {{ event.date }}</a></li>
+        <li class="list-group-item">
+            <a class="text-dark text-decoration-none" href="{% url 'events:event' event.id %}">
+                {{ event.event_title }} - {{ event.date }}
+            </a>
+        </li>
         {% endfor %}
-        </ul>
+    </ul>
     {% else %}
-        <div class="alert alert-secondary" role="alert">
-            There are currently no events.
-        </div>
+    <div class="alert alert-secondary" role="alert">
+        There are currently no events.
+    </div>
     {% endif %}
 </div>
 {% endblock %}
