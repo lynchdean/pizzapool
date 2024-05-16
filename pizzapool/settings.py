@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-44vheln+lwykz4kmk)m&yk1*vith7qo$wlwox82c*&%lwt=w+w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'http://pizzapool.pythonanywhere.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'pizzapool.pythonanywhere.com']
 
 ADMINS = [("Dean", "lynchdean@gmail.com")]
 
