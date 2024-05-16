@@ -8,7 +8,7 @@
         {% for event in events_list %}
         <li class="list-group-item">
             <a class="text-dark text-decoration-none" href="{% url 'events:event' event.id %}">
-                {{ event.event_title }} - {{ event.date }}
+                {{ event.date|date:'F d Y' }} - {{ event.event_title }} {{ event.locked|yesno:'🔒,'}}
             </a>
         </li>
         {% endfor %}
