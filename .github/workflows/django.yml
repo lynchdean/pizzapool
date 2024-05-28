@@ -32,6 +32,11 @@ jobs:
       - name: Run Tests
         run: |
           python manage.py test
+        env: |
+          DEBUG: False
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          ALLOWED_HOSTS: '*'
+          ADMINS: '"Dean" <lynchdean@gmail.com>'
       - name: Coverage report
         run: |
           coverage run --source='.' manage.py test 
