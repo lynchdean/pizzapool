@@ -32,7 +32,7 @@ jobs:
       - name: Run Tests
         run: |
           python manage.py test
-        env: |
+        env:
           DEBUG: False
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           ALLOWED_HOSTS: '*'
