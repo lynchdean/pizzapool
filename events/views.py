@@ -1,14 +1,17 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
 from django.views import generic
 from django.shortcuts import render
 from django.views.generic import DeleteView
 
-from .models import Event, PizzaOrder, PizzaSlices, PizzaOrderForm, PizzaSlicesForm
+from .models import Event, PizzaOrder, PizzaSlices, PizzaOrderForm, PizzaSlicesForm, EventsAccessForm
 
 
-class IndexView(generic.ListView):
+class IndexView(LoginRequiredMixin, generic.ListView):
     template_name = "events/index.html"
     context_object_name = "events_list"
+    login_url = '/events/events_access/'
 
     def get_queryset(self):
         return Event.objects.order_by("-date")
@@ -59,3 +62,8 @@ def claim_slices(request, pk):
     else:
         form = PizzaSlicesForm(initial={'pizza_order': pizza_order})
     return render(request, 'events/claim_slices.html', {'form': form, 'pizza_order': pizza_order})
+
+
+class EventsAccessView(LoginView):
+    authentication_form = EventsAccessForm
+    template_name = 'events/events_access.html'

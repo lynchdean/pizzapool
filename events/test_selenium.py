@@ -1,8 +1,6 @@
-import time
 from decimal import Decimal
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from selenium.common import NoSuchElementException
 from selenium.webdriver import ActionChains
 
 from selenium import webdriver
@@ -154,3 +152,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
         self.assertTrue(len(self.selenium.find_elements(By.ID, "new-orders-locked")) > 0)
         self.assertTrue(len(self.selenium.find_elements(By.ID, "new-slices-locked")) > 0)
         self.assertTrue(len(self.selenium.find_elements(By.ID, "remove-slices")) == 0)
+
+    def test_events_index_is_password_locked(self):
+        self.selenium.get(f'{self.live_server_url}/events/')
+        self.assertTrue(len(self.selenium.find_elements(By.ID, "event-login")) > 0)
