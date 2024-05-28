@@ -1,0 +1,22 @@
+{% extends "./main_template.html" %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+<div class="container p-3">
+    <div class="card w-100 mb-3">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <input name="next" type="hidden" value="{{ next }}">
+                <div class="d-grid">
+                    <button class="btn btn-success" id="event-login" type="submit">Login</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

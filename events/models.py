@@ -1,5 +1,7 @@
 import uuid
 
+from django.contrib.auth import authenticate
+from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 from django.db import models
 from django import forms
@@ -112,3 +114,19 @@ class PizzaSlicesForm(ModelForm):
             self.fields['number_of_slices'].widget.attrs.update(
                 {'max': remaining},
             )
+
+
+class EventsAccessForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super(EventsAccessForm, self).__init__(*args, **kwargs)
+        self.fields.pop('username')
+
+    def clean(self):
+        super(EventsAccessForm, self).clean()
+        self.user_cache = authenticate(
+            self.request,
+            username='events-access',
+            password=self.cleaned_data.get('password')
+        )
+        if self.user_cache is None:
+            raise forms.ValidationError('Invalid password')
