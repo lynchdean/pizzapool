@@ -1,9 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
+from django.db.models import Sum
 from django.http import HttpResponseRedirect
 from django.views import generic
 from django.shortcuts import render
-from django.views.generic import DeleteView
+from django.views.generic import DeleteView, ListView
 
 from .models import Event, PizzaOrder, PizzaSlices, PizzaOrderForm, PizzaSlicesForm, EventsAccessForm
 
@@ -25,6 +26,17 @@ class EventView(generic.DetailView):
         context = super().get_context_data(**kwargs)
         pizza_orders = PizzaOrder.objects.filter(event=self.object)
         context['pizza_orders'] = pizza_orders
+        return context
+
+
+class PizzaOrderStatsView(ListView):
+    model = PizzaOrder
+    template_name = "events/stats.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["total_orders"] = PizzaOrder.objects.count()
+        context["total_slices"] = PizzaSlices.objects.aggregate(Sum('number_of_slices'))['number_of_slices__sum']
         return context
 
 

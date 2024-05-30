@@ -6,6 +6,7 @@ app_name = "events"
 urlpatterns = [
     path("", views.IndexView.as_view(), name="index"),
     path('events_access/', views.EventsAccessView.as_view(), name='events-access'),
+    path('stats/', views.PizzaOrderStatsView.as_view(), name='stats'),
     path("<uuid:pk>/", views.EventView.as_view(), name="event"),
     path("<uuid:pk>/create-pizza-order/", views.create_pizza_order, name='create-pizza-order'),
     path("<int:pk>/claim-slices/", views.claim_slices, name='claim-slices'),
