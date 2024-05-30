@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+from django.contrib.auth.models import User
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver import ActionChains
 
@@ -156,3 +157,37 @@ class MySeleniumTests(StaticLiveServerTestCase):
     def test_events_index_is_password_locked(self):
         self.selenium.get(f'{self.live_server_url}/events/')
         self.assertTrue(len(self.selenium.find_elements(By.ID, "event-login")) > 0)
+
+    def test_events_index_password_success(self):
+        self.user = User.objects.create_user(username='events-access', password='12345')
+        self.selenium.get(f'{self.live_server_url}/events/')
+
+        # Check redirect is successful to password page
+        self.assertEqual(self.selenium.current_url, f'{self.live_server_url}/events/events_access/?next=/events/')
+
+        # Enter pw and proceed
+        pw = self.selenium.find_element(By.ID, "id_password")
+        pw.send_keys("12345")
+        login_btn = self.selenium.find_element(By.ID, "event-login")
+        login_btn.click()
+
+        # Check redirect to events page on successful password entry
+        url = self.selenium.current_url
+        self.assertEqual(url, f'{self.live_server_url}/events/')
+
+    def test_events_index_password_failure(self):
+        self.user = User.objects.create_user(username='events-access', password='12345')
+        self.selenium.get(f'{self.live_server_url}/events/')
+
+        # Check redirect is successful to password page
+        self.assertEqual(self.selenium.current_url, f'{self.live_server_url}/events/events_access/?next=/events/')
+
+        # Enter wrong pw and proceed
+        pw = self.selenium.find_element(By.ID, "id_password")
+        pw.send_keys("abcde")
+        login_btn = self.selenium.find_element(By.ID, "event-login")
+        login_btn.click()
+
+        # Check for incorrect password warning
+        warn_text = self.selenium.find_element(By.XPATH, "/html/body/div/div/div/div/form/div[1]/ul/li").text
+        self.assertEqual(warn_text, "Invalid password")
