@@ -6,15 +6,19 @@ on:
   pull_request:
     branches: [ "**" ]
 
+env:
+  DEBUG: False
+  SECRET_KEY: ${{ secrets.SECRET_KEY }}
+  ALLOWED_HOSTS: '*'
+  ADMINS: '"Dean" <lynchdean@gmail.com>'
+
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
       matrix:
         python-version: [ 3.11 ]
-
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
@@ -31,13 +35,7 @@ jobs:
       - name: Run Tests
         run: |
           python manage.py test
-        env:
-          DEBUG: False
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          ALLOWED_HOSTS: '*'
-          ADMINS: '"Dean" <lynchdean@gmail.com>'
       - name: Coverage report
         run: |
           coverage run --source='.' manage.py test 
           coverage report
-
