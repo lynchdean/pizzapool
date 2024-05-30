@@ -10,7 +10,7 @@
     <link href="{% static 'events/favicon-32x32.png' %}" rel="icon" sizes="32x32" type="image/png">
     <link href="{% static 'events/favicon-16x16.png' %}" rel="icon" sizes="16x16" type="image/png">
     <link href="{% static 'events/site.webmanifest' %}" rel="manifest">
-    {% load bootstrap5 %}
+    {% load django_bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
 </head>
@@ -27,11 +27,14 @@
     {% endblock %}
 </div>
 
-<nav class="navbar sticky-bottom navbar-dark bg-dark" data-bs-theme="dark">
-        <span class="navbar-text mx-auto">
+<nav class="footer text-center mt-auto py-3 text-muted bg-dark" data-bs-theme="dark">
+    <div class="container">
+        <span>
             Created by Dean Lynch
             <a class="text-secondary text-decoration-none" href="https://github.com/lynchdean/pizzapool">(Source)</a>
         </span>
+    </div>
+
 </nav>
 </body>
 </html>
