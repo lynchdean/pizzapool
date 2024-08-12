@@ -1,0 +1,20 @@
+<!--# events/templates/events/index.html-->
+{% extends "./main_template.html" %}
+
+{% block content %}
+<div class="container p-3">
+    {% if orgs_list %}
+    <ul class="list-group">
+        {% for org in orgs_list %}
+        <li class="list-group-item">
+            {{ org.name }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div class="alert alert-secondary" role="alert">
+        There are no organisations.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

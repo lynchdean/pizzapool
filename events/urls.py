@@ -5,6 +5,7 @@ from . import views
 app_name = "events"
 urlpatterns = [
     path("", views.IndexView.as_view(), name="index"),
+    path("orgs/", views.OrgIndexView.as_view(), name="org-index"),
     path('events_access/', views.EventsAccessView.as_view(), name='events-access'),
     path('stats/', views.PizzaOrderStatsView.as_view(), name='stats'),
     path("<uuid:pk>/", views.EventView.as_view(), name="event"),

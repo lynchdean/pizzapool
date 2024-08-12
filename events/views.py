@@ -6,7 +6,16 @@ from django.views import generic
 from django.shortcuts import render
 from django.views.generic import DeleteView, ListView
 
-from .models import Event, PizzaOrder, PizzaSlices, PizzaOrderForm, PizzaSlicesForm, EventsAccessForm
+from .models import Organisation, Event, PizzaOrder, PizzaSlices, PizzaOrderForm, PizzaSlicesForm, EventsAccessForm
+
+
+class OrgIndexView(LoginRequiredMixin, generic.ListView):
+    template_name = "events/organisations_list.html"
+    context_object_name = "orgs_list"
+    login_url = '/events/events_access/'
+
+    def get_queryset(self):
+        return Organisation.objects.all()
 
 
 class IndexView(LoginRequiredMixin, generic.ListView):

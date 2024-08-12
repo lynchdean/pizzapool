@@ -13,7 +13,17 @@ from phonenumber_field.modelfields import PhoneNumberField
 alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')
 
 
+class Organisation(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    description = models.CharField(max_length=200)
+    logo = models.ImageField(upload_to="logos")
+
+    def __str__(self):
+        return f"{self.name}"
+
+
 class Event(models.Model):
+    organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     event_title = models.CharField(max_length=100)
     date = models.DateTimeField("date of event")
