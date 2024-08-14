@@ -4,15 +4,21 @@
 {% block content %}
 <div class="container p-3">
     {% if orgs_list %}
-    <ul class="list-group">
-        {% for org in orgs_list %}
-        <li class="list-group-item">
-            <a class="text-dark text-decoration-none" href="{% url 'events:org-detail' org.path %}">
-                {{ org.name }}
-            </a>
-        </li>
-        {% endfor %}
-    </ul>
+    {% for org in orgs_list %}
+    <div class="card p-3 mb-3">
+        <div class="d-flex justify-content-between">
+            <div class="d-flex flex-row align-items-center">
+                <img alt="organisation logo" class="img-fluid rounded-start" height="50" src="{{ org.logo.url }}"
+                     width="50">
+                <div class="ms-2 c-details">
+                    <h6 class="mb-0">{{ org.name }}</h6> <span>{{ org.description }}</span>
+                </div>
+            </div>
+            <div class="badge"><span>Design</span></div>
+        </div>
+        <a class="stretched-link" href="{% url 'events:org-detail' org.path %}"></a>
+    </div>
+    {% endfor %}
     {% else %}
     <div class="alert alert-secondary" role="alert">
         There are no organisations.

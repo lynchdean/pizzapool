@@ -12,7 +12,7 @@ from .models import Organisation, Event, PizzaOrder, PizzaSlices, PizzaOrderForm
 class OrgIndexView(LoginRequiredMixin, generic.ListView):
     template_name = "events/organisations_list.html"
     context_object_name = "orgs_list"
-    login_url = '/events/events_access/'
+    login_url = '/events_access/'
 
     def get_queryset(self):
         return Organisation.objects.all()
@@ -21,7 +21,7 @@ class OrgIndexView(LoginRequiredMixin, generic.ListView):
 class IndexView(LoginRequiredMixin, generic.ListView):
     template_name = "events/index.html"
     context_object_name = "events_list"
-    login_url = '/events/events_access/'
+    login_url = '/events_access/'
 
     def get_queryset(self):
         return Event.objects.order_by("-date")
