@@ -1,0 +1,33 @@
+<!--# events/templates/events/index.html-->
+{% extends "./main_template.html" %}
+
+{% block content %}
+<div class="container p-3">
+
+    <div class="card">
+        <img alt="organisation banner" class="card-img-top" src="{{ organisation.banner_image.url }}">
+        <div class="card-body">
+            <h3 class="card-title">{{ organisation.name }}</h3>
+            <p class="card-text">{{ organisation.description }}</p>
+
+            <h4>Events:</h4>
+            {% if events %}
+            <ul class="list-group list-group-flush">
+                {% for event in events %}
+                <li class="list-group-item">
+                    <a class="text-dark text-decoration-none"
+                       href="{% url 'events:event' organisation.path event.id %}">
+                        {{ event.date|date:'F d Y' }} - {{ event.event_title }} {{ event.locked|yesno:'🔒,'}}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <div class="alert alert-secondary mb-0" role="alert">
+                There are currently no events.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

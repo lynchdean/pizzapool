@@ -1,3 +1,4 @@
+import re
 import uuid
 
 from django.contrib.auth import authenticate
@@ -5,21 +6,45 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 from django.db import models
 from django import forms
-from django.db.models import Sum
+from django.db.models import Sum, Value, UniqueConstraint
+from django.db.models.functions import Lower, Replace
 from django.forms import ModelForm
 from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
+from django.template.defaultfilters import slugify
 from phonenumber_field.modelfields import PhoneNumberField
 
 alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')
+alphanumeric_hyphen_space = RegexValidator(
+    r'^[0-9a-zA-Z\- ]*$',
+    'Only alphanumeric characters, hyphens and spaces are allowed.')
 
 
 class Organisation(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, unique=True, validators=[alphanumeric_hyphen_space])
     description = models.CharField(max_length=200)
     logo = models.ImageField(upload_to="logos")
+    banner_image = models.ImageField(upload_to="banners")
+    path = models.SlugField(unique=True)
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(
+                Lower('name'),
+                name="unique_organisation_name",
+                violation_error_message="Organisation name already exists."
+            ),
+        ]
 
     def __str__(self):
         return f"{self.name}"
+
+    def clean(self):
+        if self.name:
+            self.name = ' '.join(str(self.name).split())
+
+    def save(self, *args, **kwargs):
+        self.path = slugify(self.name)
+        super().save(*args, **kwargs)
 
 
 class Event(models.Model):

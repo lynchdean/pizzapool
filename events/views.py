@@ -27,6 +27,19 @@ class IndexView(LoginRequiredMixin, generic.ListView):
         return Event.objects.order_by("-date")
 
 
+class OrgDetailView(generic.DetailView):
+    model = Organisation
+    template_name = "events/organisation_detail.html"
+    slug_field = "path"
+    slug_url_kwarg = "path"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        events = Event.objects.filter(organisation=self.object)
+        context['events'] = events
+        return context
+
+
 class EventView(generic.DetailView):
     model = Event
     template_name = "events/event_detail.html"

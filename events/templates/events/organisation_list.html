@@ -7,7 +7,9 @@
     <ul class="list-group">
         {% for org in orgs_list %}
         <li class="list-group-item">
-            {{ org.name }}
+            <a class="text-dark text-decoration-none" href="{% url 'events:org-detail' org.path %}">
+                {{ org.name }}
+            </a>
         </li>
         {% endfor %}
     </ul>

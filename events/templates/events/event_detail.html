@@ -114,7 +114,8 @@
         <a class="btn btn-success text-center disabled" href="" id="new-orders-locked" role="button">Event Locked</a>
         {% else %}
         <a class="btn btn-success text-center"
-           href="{% url 'events:create-pizza-order' event.id %}?next={{ request.path|urlencode }}" id="create-order-btn"
+           href="{% url 'events:create-pizza-order' event.organisation.path event.id %}?next={{ request.path|urlencode }}"
+           id="create-order-btn"
            role="button">Start a new pizza
             order</a>
         {% endif %}
