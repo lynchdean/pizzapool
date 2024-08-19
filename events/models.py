@@ -20,10 +20,11 @@ alphanumeric_hyphen_space = RegexValidator(
 
 
 class Organisation(models.Model):
-    name = models.CharField(max_length=100, unique=True, validators=[alphanumeric_hyphen_space])
+    name = models.CharField(max_length=50, unique=True, validators=[alphanumeric_hyphen_space])
     description = models.CharField(max_length=200)
+    tag_line = models.CharField(max_length=50)
     logo = models.ImageField(upload_to="logos")
-    banner_image = models.ImageField(upload_to="banners")
+    banner = models.ImageField(upload_to="banners")
     path = models.SlugField(unique=True)
 
     class Meta:

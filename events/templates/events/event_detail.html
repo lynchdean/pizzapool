@@ -5,10 +5,13 @@
 {% block content %}
 
 <div class="container"
-     style="background-image: url('{% static 'events/bambino.jpg' %}'); width: 100%; background-repeat: no-repeat; background-size: cover; background-position-y: center;">
+     style="background-image: url({{ event.organisation.banner.url }}); width: 100%; background-repeat: no-repeat; background-size: cover; background-position-y: center;">
     <div class="text-white text-center p-5">
         <div class="container">
-            <h1 class="display-4">{{ event.event_title }}</h1>
+            <img alt="organisation logo" class="rounded mx-auto d-block"
+                 src="{{ event.organisation.logo.url }}" width="150">
+            <h2 class="display-5">{{ event.organisation.name }}</h2>
+            <h2 class="display-6">{{ event.event_title }}</h2>
             <p class="mb-0 mx-auto lead">{{ event.date }}</p>
         </div>
     </div>

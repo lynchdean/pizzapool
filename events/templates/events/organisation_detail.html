@@ -2,34 +2,40 @@
 {% extends "./main_template.html" %}
 
 {% block content %}
-<div class="container p-3">
 
-    <div class="card">
-        <img alt="organisation banner" class="card-img-top" src="{{ organisation.logo.url }}">
-        <div class="card-body">
-            <h3 class="card-title">{{ organisation.name }}</h3>
-            <p class="card-text">{{ organisation.description }}</p>
-
-            <h4>Events:</h4>
-            {% if events %}
-            <ul class="list-group list-group-flush">
-                {% for event in events %}
-                <li class="list-group-item">
-                    <a class="text-dark text-decoration-none"
-                       href="{% url 'events:event' organisation.path event.id %}">
-                        {{ event.date|date:'F d Y' }} - {{ event.event_title }} {{ event.locked|yesno:'🔒,'}}
-                    </a>
-                </li>
-                {% endfor %}
-            </ul>
-            {% else %}
-            <div class="alert alert-secondary mb-0" role="alert">
-                There are currently no events.
-            </div>
-            {% endif %}
+<div class="container"
+     style="background-image: url({{ organisation.banner.url }}); width: 100%; background-repeat: no-repeat; background-size: cover; background-position-y: center;">
+    <div class="text-white text-center p-5">
+        <div class="container">
+            <img alt="organisation logo" class="rounded mx-auto d-block"
+                 src="{{ organisation.logo.url }}" width="150">
+            <h2 class="card-title display-5">{{ organisation.name }}</h2>
+            <p class="lead">{{ organisation.description }}</p>
         </div>
     </div>
-
-
 </div>
+
+
+<div class="container p-3">
+    <h3>Events:</h3>
+
+
+    {% if events %}
+    <ul class="list-group">
+        {% for event in events %}
+        <li class="list-group-item">
+            <a class="text-dark text-decoration-none"
+               href="{% url 'events:event' organisation.path event.id %}">
+                {{ event.date|date:'F d, Y' }} - {{ event.event_title }} {{ event.locked|yesno:'🔒,'}}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div class="alert alert-secondary mb-0" role="alert">
+        There are currently no events.
+    </div>
+    {% endif %}
+</div>
+
 {% endblock %}
