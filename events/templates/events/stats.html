@@ -14,9 +14,11 @@
                 <dd class="col-sm-10">{{ total_slices }}</dd>
             </dl>
             <p>
+                {% if total_slices %}
                 {% for x in ""|ljust:total_slices %}
                 🍕
                 {% endfor %}
+                {% endif %}
             </p>
         </div>
     </div>

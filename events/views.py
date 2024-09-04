@@ -6,16 +6,38 @@ from django.views import generic
 from django.shortcuts import render
 from django.views.generic import DeleteView, ListView
 
-from .models import Event, PizzaOrder, PizzaSlices, PizzaOrderForm, PizzaSlicesForm, EventsAccessForm
+from .models import Organisation, Event, PizzaOrder, PizzaSlices, PizzaOrderForm, PizzaSlicesForm, EventsAccessForm
+
+
+class OrgIndexView(LoginRequiredMixin, generic.ListView):
+    template_name = "events/organisations_list.html"
+    context_object_name = "orgs_list"
+    login_url = '/events_access/'
+
+    def get_queryset(self):
+        return Organisation.objects.all()
 
 
 class IndexView(LoginRequiredMixin, generic.ListView):
     template_name = "events/index.html"
     context_object_name = "events_list"
-    login_url = '/events/events_access/'
+    login_url = '/events_access/'
 
     def get_queryset(self):
         return Event.objects.order_by("-date")
+
+
+class OrgDetailView(generic.DetailView):
+    model = Organisation
+    template_name = "events/organisation_detail.html"
+    slug_field = "path"
+    slug_url_kwarg = "path"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        events = Event.objects.filter(organisation=self.object)
+        context['events'] = events
+        return context
 
 
 class EventView(generic.DetailView):
@@ -52,7 +74,7 @@ class PizzaSlicesDeleteView(DeleteView):
             return "/events"
 
 
-def create_pizza_order(request, pk):
+def create_pizza_order(request, path, pk):
     event = Event.objects.get(pk=pk)
     if request.method == 'POST':
         form = PizzaOrderForm(request.POST)
@@ -64,7 +86,7 @@ def create_pizza_order(request, pk):
     return render(request, 'events/create_pizza_order.html', {'form': form, 'event': event})
 
 
-def claim_slices(request, pk):
+def claim_slices(request, path, pk):
     pizza_order = PizzaOrder.objects.get(pk=pk)
     if request.method == 'POST':
         form = PizzaSlicesForm(request.POST)

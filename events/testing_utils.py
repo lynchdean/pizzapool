@@ -1,10 +1,19 @@
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils import timezone
 
-from .models import Event, PizzaOrder, PizzaSlices
+from .models import Event, PizzaOrder, PizzaSlices, Organisation
+
+mock_img = SimpleUploadedFile(name='test_image.png', content=b"file data")
 
 
-def create_event(event_title="Test Event", date=timezone.now(), description="desc", locked=False):
-    return Event.objects.create(event_title=event_title, date=date, description=description, locked=locked)
+def create_organisation(name="Test Org", description="org desc", tag_line="tag line", logo=mock_img, banner=mock_img):
+    return Organisation.objects.create(name=name, description=description, tag_line=tag_line, logo=logo, banner=banner)
+
+
+def create_event(organisation, event_title="Test Event", date=timezone.now(), description="desc",
+                 locked=False):
+    return Event.objects.create(organisation=organisation, event_title=event_title, date=date, description=description,
+                                locked=locked)
 
 
 def create_order(event, purchaser_name="Bob", purchaser_whatsapp="0879876543", purchaser_revolut="BobRev",

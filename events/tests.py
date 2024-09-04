@@ -1,15 +1,17 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
-from .testing_utils import create_event, create_order, create_slices
+from .testing_utils import create_event, create_order, create_slices, create_organisation
 
 
 class PizzaOrderModelTests(TestCase):
     def setUp(self):
-        self.event = create_event()
+        self.org = create_organisation()
+        self.event = create_event(self.org)
         self.order = create_order(event=self.event)
 
     def tearDown(self):
+        self.org.delete()
         self.event.delete()
         self.order.delete()
 
@@ -126,10 +128,12 @@ class PizzaOrderModelTests(TestCase):
 
 class PizzaSlicesModelTests(TestCase):
     def setUp(self):
-        self.event = create_event()
+        self.org = create_organisation()
+        self.event = create_event(self.org)
         self.order = create_order(event=self.event)
 
     def tearDown(self):
+        self.org.delete()
         self.event.delete()
         self.order.delete()
 
