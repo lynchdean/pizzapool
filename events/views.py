@@ -74,7 +74,7 @@ class PizzaSlicesDeleteView(DeleteView):
             return "/events"
 
 
-def create_pizza_order(request, pk):
+def create_pizza_order(request, path, pk):
     event = Event.objects.get(pk=pk)
     if request.method == 'POST':
         form = PizzaOrderForm(request.POST)
@@ -86,7 +86,7 @@ def create_pizza_order(request, pk):
     return render(request, 'events/create_pizza_order.html', {'form': form, 'event': event})
 
 
-def claim_slices(request, pk):
+def claim_slices(request, path, pk):
     pizza_order = PizzaOrder.objects.get(pk=pk)
     if request.method == 'POST':
         form = PizzaSlicesForm(request.POST)

@@ -4,7 +4,7 @@ from . import views
 
 app_name = "events"
 urlpatterns = [
-    path("", views.IndexView.as_view(), name="index"),
+    # path("", views.IndexView.as_view(), name="index"),
     path('events_access/', views.EventsAccessView.as_view(), name='events-access'),
     path('stats/', views.PizzaOrderStatsView.as_view(), name='stats'),
     path("orgs/", views.OrgIndexView.as_view(), name="org-index"),
