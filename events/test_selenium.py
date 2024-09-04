@@ -1,4 +1,3 @@
-import time
 from decimal import Decimal
 
 from django.contrib.auth.models import User
@@ -20,6 +19,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
         options = Options()
         options.add_argument("--headless")
         cls.selenium = webdriver.Chrome(options=options)
+        cls.selenium.maximize_window()
         cls.selenium.implicitly_wait(10)
 
     @classmethod
