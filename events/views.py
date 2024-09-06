@@ -1,10 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.db.models import Sum
-from django.http import HttpResponseRedirect
 from django.utils import timezone
 from django.views import generic
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import DeleteView, ListView
 
 from .models import Organisation, Event, PizzaOrder, PizzaSlices, PizzaOrderForm, PizzaSlicesForm, EventsAccessForm
@@ -82,7 +81,7 @@ def create_pizza_order(request, path, pk):
         form = PizzaOrderForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(request.POST.get('next', '/'))
+            return redirect("events:event", path=path, pk=pk)
     else:
         form = PizzaOrderForm(initial={'event': event})
     return render(request, 'events/create_pizza_order.html', {'form': form, 'event': event})
@@ -92,9 +91,10 @@ def claim_slices(request, path, pk):
     pizza_order = PizzaOrder.objects.get(pk=pk)
     if request.method == 'POST':
         form = PizzaSlicesForm(request.POST)
+        form = PizzaSlicesForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(request.POST.get('next', '/'))
+            return redirect("events:event", path=path, pk=pizza_order.event.id)
     else:
         form = PizzaSlicesForm(initial={'pizza_order': pizza_order})
     return render(request, 'events/claim_slices.html', {'form': form, 'pizza_order': pizza_order})
