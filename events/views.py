@@ -2,6 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.db.models import Sum
 from django.http import HttpResponseRedirect
+from django.utils import timezone
 from django.views import generic
 from django.shortcuts import render
 from django.views.generic import DeleteView, ListView
@@ -35,8 +36,9 @@ class OrgDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        events = Event.objects.filter(organisation=self.object)
-        context['events'] = events
+        today = timezone.now()
+        context['current_events'] = Event.objects.filter(organisation=self.object, date__gte=today)
+        context['past_events'] = Event.objects.filter(organisation=self.object, date__lt=today)
         return context
 
 
