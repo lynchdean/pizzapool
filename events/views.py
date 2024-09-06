@@ -18,15 +18,6 @@ class OrgIndexView(LoginRequiredMixin, generic.ListView):
         return Organisation.objects.all()
 
 
-class IndexView(LoginRequiredMixin, generic.ListView):
-    template_name = "events/index.html"
-    context_object_name = "events_list"
-    login_url = '/events_access/'
-
-    def get_queryset(self):
-        return Event.objects.order_by("-date")
-
-
 class OrgDetailView(generic.DetailView):
     model = Organisation
     template_name = "events/organisation_detail.html"
