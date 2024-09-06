@@ -10,7 +10,10 @@
         <div class="container">
             <img alt="organisation logo" class="rounded mx-auto d-block"
                  src="{{ event.organisation.logo.url }}" width="150">
-            <h2 class="display-5">{{ event.organisation.name }}</h2>
+            <a class="text-light display-5 text-decoration-none"
+               href="{% url 'events:org-detail' event.organisation.path %}">
+                {{ event.organisation.name }}
+            </a>
             <h2 class="display-6">{{ event.event_title }}</h2>
             <p class="mb-0 mx-auto lead">{{ event.date }}</p>
         </div>

@@ -11,6 +11,7 @@ from django.db.models.functions import Lower, Replace
 from django.forms import ModelForm
 from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 from django.template.defaultfilters import slugify
+from django.utils import timezone
 from phonenumber_field.modelfields import PhoneNumberField
 
 alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')
@@ -58,6 +59,13 @@ class Event(models.Model):
 
     def __str__(self):
         return f"{'[LOCKED]' if self.locked else ''}{self.event_title} - {self.date}"
+
+    def upcoming(self, organisation):
+        return self.filter(organisation=organisation, start__gte=timezone.now().replace(hour=0, minute=0, second=0),
+                           end__lte=timezone.now().replace(hour=23, minute=59, second=59))
+
+    def past(self, organisation):
+        return self.filter(organisation=organisation, date__lt=timezone.now())
 
 
 class PizzaOrder(models.Model):
