@@ -9,4 +9,5 @@ This app was designed so that people could organise and pre-order a full pizza t
  - Provided Revolut details for each of the orders, and a WhatsApp contact for those who need a reminder to pay their share.
  - 10 full orders made. 80 slices deleivered, 58 of those distributed to different people with the help of the app.
  - A noticibly shorter queue in the restaurant, meaning those who weren't fortunate enough to use the app to claim a slice also benefitted by having to wait less time to make an order.
-** Pizzapool has been used ever since for each of the Mild Activity Wednesday Social events! Some stats will be shared once the Wednesday Socials finsh up for the year **
+
+**Pizzapool has been used ever since for each of the Mild Activity Wednesday Social events! Some stats will be shared once the Wednesday Socials finsh up for the year.**
