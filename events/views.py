@@ -1,12 +1,15 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.db.models import Sum
 from django.utils import timezone
 from django.views import generic
 from django.shortcuts import render, redirect
-from django.views.generic import DeleteView, ListView
+from django.views.generic import DeleteView, ListView, TemplateView
 
 from .models import Organisation, Event, PizzaOrder, PizzaSlices, PizzaOrderForm, PizzaSlicesForm, EventsAccessForm
+
+
+class HomePage(TemplateView):
+    template_name = "events/homepage.html"
 
 
 class OrgIndexView(generic.ListView):
@@ -80,7 +83,6 @@ def create_pizza_order(request, path, pk):
 def claim_slices(request, path, pk):
     pizza_order = PizzaOrder.objects.get(pk=pk)
     if request.method == 'POST':
-        form = PizzaSlicesForm(request.POST)
         form = PizzaSlicesForm(request.POST)
         if form.is_valid():
             form.save()
