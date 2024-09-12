@@ -1,11 +1,10 @@
-from django.shortcuts import redirect
 from django.urls import path
 
 from . import views
 
 app_name = "events"
 urlpatterns = [
-    path('', lambda request: redirect('orgs/', permanent=True)),
+    path('', views.HomePage.as_view(), name='home'),
     path('events_access/', views.EventsAccessView.as_view(), name='events-access'),
     path('stats/', views.PizzaOrderStatsView.as_view(), name='stats'),
     path("orgs/", views.OrgIndexView.as_view(), name="org-index"),
