@@ -4,22 +4,33 @@
 
 {% block content %}
 
-<div class="card rounded-pill" style="max-height: 210px; ">
-    <div class="row g-0">
-        <div class="col-4">
-            <img alt="Organisation logo" class="img-thumbnail float-start rounded-pill border-0"
-                 src="{{ event.organisation.logo.url }}" style="max-height: 200px;"/>
-        </div>
-        <div class="col-8 align-self-center text-end pe-4">
-            <div class="card-body">
-                <h5 class="display-5">{{ event.organisation.name }}</h5>
-            </div>
-        </div>
+<!--<div class="card rounded-pill" style="max-height: 210px; ">-->
+<!--    <div class="row g-0">-->
+<!--        <div class="col-4">-->
+<!--            <img alt="Organisation logo" class="img-thumbnail float-start rounded-pill border-0"-->
+<!--                 src="{{ event.organisation.logo.url }}" style="max-height: 200px;"/>-->
+<!--        </div>-->
+<!--        <div class="col-8 align-self-center text-end pe-4">-->
+<!--            <div class="card-body">-->
+<!--                <h5 class="display-5">{{ event.organisation.name }}</h5>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+
+<div class="container">
+    <div class="row text-center pt-4">
+        <img alt="Organisation logo" class="rounded-circle mx-auto d-block" src="{{ event.organisation.logo.url }}"
+             style="max-height: 140px; max-width: 140px;"/>
+    </div>
+    <div class="row text-center text-light">
+        <h2 class="display-5">{{ event.organisation.name }}</h2>
     </div>
 </div>
 
 <div class="container">
-    <div class="row d-flex text-center text-light border-2 border-bottom p-5 mb-3">
+    <div class="row d-flex text-center text-light border-2 border-bottom pb-5 mb-3">
         <h2 class="display-6">{{ event.event_title }}</h2>
         <p class="mb-0 mx-auto lead">{{ event.date }}</p>
     </div>
