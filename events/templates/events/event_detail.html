@@ -4,23 +4,28 @@
 
 {% block content %}
 
-<div class="container"
-     style="background-image: url({{ event.organisation.banner.url }}); width: 100%; background-repeat: no-repeat; background-size: cover; background-position-y: center;">
-    <div class="text-white text-center p-5">
-        <div class="container">
-            <img alt="organisation logo" class="rounded mx-auto d-block"
-                 src="{{ event.organisation.logo.url }}" width="150">
-            <a class="text-light display-5 text-decoration-none"
-               href="{% url 'events:org-detail' event.organisation.path %}">
-                {{ event.organisation.name }}
-            </a>
-            <h2 class="display-6">{{ event.event_title }}</h2>
-            <p class="mb-0 mx-auto lead">{{ event.date }}</p>
+<div class="card rounded-pill" style="max-height: 210px; ">
+    <div class="row g-0">
+        <div class="col-4">
+            <img alt="Organisation logo" class="img-thumbnail float-start rounded-pill border-0"
+                 src="{{ event.organisation.logo.url }}" style="max-height: 200px;"/>
+        </div>
+        <div class="col-8 align-self-center text-end pe-4">
+            <div class="card-body">
+                <h5 class="display-5">{{ event.organisation.name }}</h5>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="container mb-3">
+<div class="container">
+    <div class="row d-flex text-center text-light border-2 border-bottom p-5 mb-3">
+        <h2 class="display-6">{{ event.event_title }}</h2>
+        <p class="mb-0 mx-auto lead">{{ event.date }}</p>
+    </div>
+</div>
+
+<div class="container text-light mb-3">
     <h3 class="py-3">Pizza Orders:</h3>
     {% if pizza_orders %}
     {% for pizza_order in pizza_orders %}
@@ -92,16 +97,17 @@
 
             <div class="d-grid ">
                 {% if pizza_order.event_is_locked %}
-                <a class="btn btn-outline-success text-center disabled" href="" id="new-slices-locked" role="button">Event
+                <a class="btn btn-outline-danger rounded-pill text-center disabled" href="" id="new-slices-locked"
+                   role="button">Event
                     Locked</a>
                 {% elif pizza_order.get_total_remaining > 0 %}
-                <a class="btn btn-outline-success text-center"
+                <a class="btn btn-outline-danger rounded-pill text-center"
                    href="{% url 'events:claim-slices' event.organisation.path pizza_order.id %}?next={{ request.path|urlencode }}"
                    id="join-order-btn"
                    role="button">
                     Join Order</a>
                 {% else %}
-                <a class="btn btn-outline-success text-center disabled" href="" id="order-full" role="button">Order
+                <a class="btn btn-outline-danger text-center disabled" href="" id="order-full" role="button">Order
                     Full</a>
                 {% endif %}
             </div>
@@ -110,20 +116,17 @@
 
     {% endfor %}
     {% else %}
-    <div class="alert alert-secondary" role="alert">
-        Nobody has offered to order yet for this event
-    </div>
+    <p>Nobody has offered to order yet for this event</p>
     {% endif %}
 
-    <div class="d-grid">
+    <div class="d-grid mb-5">
         {% if event.locked %}
-        <a class="btn btn-success text-center disabled" href="" id="new-orders-locked" role="button">Event Locked</a>
+        <a class="btn rounded-pill text-center disabled" href="" id="new-orders-locked" role="button">Event Locked</a>
         {% else %}
-        <a class="btn btn-success text-center"
+        <a class="btn btn-outline-light rounded-pill text-center"
            href="{% url 'events:create-pizza-order' event.organisation.path event.id %}?next={{ request.path|urlencode }}"
            id="create-order-btn"
-           role="button">Start a new pizza
-            order</a>
+           role="button">Start a new pizza order</a>
         {% endif %}
     </div>
 </div>

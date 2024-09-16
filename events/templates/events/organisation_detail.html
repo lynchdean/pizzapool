@@ -2,56 +2,56 @@
 {% extends "./main_template.html" %}
 
 {% block content %}
-
-<div class="container"
-     style="background-image: url({{ organisation.banner.url }}); width: 100%; background-repeat: no-repeat; background-size: cover; background-position-y: center;">
-    <div class="text-white text-center p-5">
-        <div class="container">
-            <img alt="organisation logo" class="rounded mx-auto d-block"
-                 src="{{ organisation.logo.url }}" width="150">
-            <h2 class="card-title display-5">{{ organisation.name }}</h2>
-            <p class="lead">{{ organisation.description }}</p>
+<div class="card rounded-pill" style="max-height: 210px; ">
+    <div class="row g-0">
+        <div class="col-4">
+            <img alt="Organisation logo" class="img-thumbnail float-start rounded-pill border-0"
+                 src="{{ organisation.logo.url }}" style="max-height: 200px;"/>
+        </div>
+        <div class="col-8 align-self-center text-end pe-4">
+            <div class="card-body">
+                <h5 class="display-5">{{ organisation.name }}</h5>
+            </div>
         </div>
     </div>
 </div>
 
-
-<div class="container p-3">
-    <h3>Upcoming events:</h3>
-    {% if current_events %}
-    <ul class="list-group">
-        {% for event in current_events %}
-        <li class="list-group-item">
-            <a class="text-dark text-decoration-none"
-               href="{% url 'events:event' organisation.path event.id %}">
-                {{ event.date|date:'F d, Y' }} - {{ event.event_title }} {{ event.locked|yesno:'🔒,'}}
-            </a>
-        </li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <div class="alert alert-secondary mb-0" role="alert">
-        There are no upcoming events.
+<div class="container">
+    <div class="row d-flex text-center text-light border-2 border-bottom p-5 mb-3">
+        <h3 class="lead my-auto">{{ organisation.description }}</h3>
     </div>
-    {% endif %}
-
-    <h3 class="mt-3">Past events:</h3>
-    {% if past_events %}
-    <ul class="list-group">
-        {% for event in past_events %}
-        <li class="list-group-item">
-            <a class="text-dark text-decoration-none"
-               href="{% url 'events:event' organisation.path event.id %}">
-                {{ event.date|date:'F d, Y' }} - {{ event.event_title }} {{ event.locked|yesno:'🔒,'}}
-            </a>
-        </li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <div class="alert alert-secondary mb-0" role="alert">
-        There are no past events.
-    </div>
-    {% endif %}
 </div>
 
+<h3 class="text-light">Upcoming events:</h3>
+{% if current_events %}
+<div class="card rounded p-2 ">
+    <div class="list-group list-group-flush  ">
+        {% for event in current_events %}
+        <a class="list-group-item list-group-item-action px-2"
+           href="{% url 'events:event' organisation.path event.id %}">
+            {{ event.date|date:'F d, Y' }} - {{ event.event_title }} {{ event.locked|yesno:'🔒,'}}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+
+{% else %}
+<p class="text-light">There are no upcoming events.</p>
+{% endif %}
+
+<h3 class="text-light mt-3">Past events:</h3>
+{% if past_events %}
+<div class="card rounded p-2 ">
+    <div class="list-group list-group-flush rounded">
+        {% for event in past_events %}
+        <a class="list-group-item list-group-item-action"
+           href="{% url 'events:event' organisation.path event.id %}">
+            {{ event.date|date:'F d, Y' }} - {{ event.event_title }} {{ event.locked|yesno:'🔒,'}}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<p class="text-light">There are no past events</p>
+{% endif %}
 {% endblock %}

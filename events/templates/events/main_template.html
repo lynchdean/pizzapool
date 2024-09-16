@@ -10,33 +10,88 @@
     <link href="{% static 'events/favicon-32x32.png' %}" rel="icon" sizes="32x32" type="image/png">
     <link href="{% static 'events/favicon-16x16.png' %}" rel="icon" sizes="16x16" type="image/png">
     <link href="{% static 'events/site.webmanifest' %}" rel="manifest">
+    <!--  ads  -->
     <script async crossorigin="anonymous"
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4985938341753226"></script>
+    <!--  /ads  -->
+    <!--  fonts  -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,600;1,600&display=swap"
+          rel="stylesheet">
+    <!--  /fonts  -->
     {% load django_bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
 </head>
 <body>
-<nav class="navbar navbar-dark bg-dark">
-    <div class="container-fluid">
-        <span class="navbar-brand mx-auto mb-0 h1">
-            <a class="text-reset text-decoration-none" href="{% url 'events:home' %}">🍕pizzapool</a>
-        </span>
-    </div>
-</nav>
-<div class="bg-light min-vh-100">
+
+<style>
+    html, body {
+        height:100%;
+    }
+
+    body {
+        background: linear-gradient(0.9turn, #dc143b 50%, #ffa200);
+        background-repeat: no-repeat;
+        background-attachment: stretch;
+        background-color:#dc143b;
+    }
+</style>
+<!-- Background image -->
+<!--<div class="bg-image"-->
+<!--     style="background-image: url('https://mdbootstrap.com/img/new/standard/city/041.jpg');-->
+<!--            height: 100vh">-->
+<!--</div>-->
+<!-- Background image -->
+
+<!--<nav class="navbar navbar-light">-->
+<!--    <div class="container-fluid">-->
+<!--        <span class="navbar-brand mx-auto mb-0 h1">-->
+<!--            <a class="text-reset text-decoration-none" href="{% url 'events:home' %}">🍕pizzapool</a>-->
+<!--        </span>-->
+<!--    </div>-->
+<!--</nav>-->
+<div class="container">
+    <header class="d-flex flex-wrap  pt-3 mb-4 border-bottom border-2">
+        <a class="d-flex align-items-center text-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-light text-decoration-none"
+           href="/">
+            <span class="fs-4" style="font-family: 'Montserrat', sans-serif; letter-spacing: 0.25rem;">pizzapool</span>
+        </a>
+
+        <!--        <ul class="nav nav-pills">-->
+        <!--            <li class="nav-item"><a class="nav-link" href="#"></a></li>-->
+        <!--            <li class="nav-item"><a class="nav-link" href="#">Features</a></li>-->
+        <!--            <li class="nav-item"><a class="nav-link" href="#">Pricing</a></li>-->
+        <!--            <li class="nav-item"><a class="nav-link" href="#">FAQs</a></li>-->
+        <!--            <li class="nav-item"><a class="nav-link" href="#">About</a></li>-->
+        <!--        </ul>-->
+    </header>
+</div>
+
+<div class="container px-4">
     {% block content %}
     {% endblock %}
 </div>
 
-<nav class="footer text-center mt-auto py-3 text-muted bg-dark" data-bs-theme="dark">
-    <div class="container">
-        <span>
-            Created by Dean Lynch
-            <a class="text-secondary text-decoration-none" href="https://github.com/lynchdean/pizzapool">(Source)</a>
-        </span>
-    </div>
+<div class="container">
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top border-2">
+        <p class="col-md-4 mb-0 text-light">&copy; {% now 'Y' %} Dean Lynch</p>
+        <a class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"
+           href="/">
+            <!--            <svg class="bi me-2" height="32" width="40">-->
+            <!--                <use xlink:href="#bootstrap"></use>-->
+            <!--            </svg>-->
+        </a>
+        <ul class="nav col-md-4 justify-content-end">
+            <li class="nav-item"><a class="nav-link px-2 text-light"
+                                    href="https://github.com/lynchdean/pizzapool">Github</a></li>
+            <li class="nav-item"><a class="nav-link px-2 text-light" href="buymeacoffee.com/deanlynch">Buy
+                Me A Coffee</a>
+            </li>
+        </ul>
+    </footer>
+</div>
 
-</nav>
 </body>
 </html>

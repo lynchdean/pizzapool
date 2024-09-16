@@ -2,12 +2,9 @@
 {% extends "./main_template.html" %}
 
 {% block content %}
-<div class="container p-3">
+<div class="container text-light p-3">
     <h3>Join Order:</h3>
     {% if not pizza_order.event_is_locked %}
-    <div class="alert alert-warning small" role="alert">
-        Please be vigilant when joining an order and sending money via revolut, especially with a person unknown to you.
-    </div>
     <div class="card">
         <div class="card-body">
             {% load crispy_forms_tags %}
@@ -16,7 +13,8 @@
                 {{ form|crispy }}
                 <input name="next" type="hidden" value="{{ request.GET.next }}">
                 <div class="d-grid">
-                    <button class="btn btn-success" id="confirm-join-btn" type="submit">Confirm</button>
+                    <button class="btn btn-outline-danger rounded-pill" id="confirm-join-btn" type="submit">Confirm
+                    </button>
                 </div>
             </form>
         </div>
