@@ -5,17 +5,17 @@
 <div class="container p-3">
     {% if orgs_list %}
     {% for org in orgs_list %}
-    <div class="card p-3 mb-3">
-        <div class="d-flex justify-content-between">
-            <div class="d-flex flex-row align-items-center">
-                <img alt="organisation logo" class="img-fluid" height="50"
-                     src="{{ org.logo.url }}"
-                     width="50">
-                <div class="ms-2 c-details">
-                    <h6 class="mb-0">{{ org.name }}</h6> <span>{{ org.description }}</span>
+    <div class="card rounded-pill mb-3" style="max-height: 210px; ">
+        <div class="row g-0">
+            <div class="col-4">
+                <img alt="Organisation logo" class="img-thumbnail float-start rounded-pill border-0"
+                     src="{{ org.logo.url }}" style="max-height: 200px;"/>
+            </div>
+            <div class="col-8 align-self-center text-end pe-4">
+                <div class="card-body">
+                    <h5 class="display-6">{{ org.name }}</h5>
                 </div>
             </div>
-            <div class="badge"><span>Design</span></div>
         </div>
         <a class="stretched-link" href="{% url 'events:org-detail' org.path %}"></a>
     </div>
