@@ -5,13 +5,13 @@
 <div class="container p-3">
     {% if orgs_list %}
     {% for org in orgs_list %}
-    <div class="card-transparent mb-3" style="max-height: 210px; ">
+    <div class="card-transparent position-relative mb-3" style="max-height: 210px; ">
         <div class="row g-0">
-            <div class="col-4">
+            <div class="col-2">
                 <img alt="Organisation logo" class="float-start rounded-pill border-0"
                      src="{{ org.logo.url }}" style="max-height: 100px;"/>
             </div>
-            <div class="col-8 align-self-center">
+            <div class="col-10 align-self-center">
                 <div class="card-body text-light ms-3">
                     <h5 class="display-6">{{ org.name }}</h5>
                 </div>
