@@ -57,7 +57,7 @@ class Event(models.Model):
     locked = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{'[LOCKED]' if self.locked else ''} {self.event_title} - {self.date}"
+        return f"{self.organisation} - {self.date}: {'[LOCKED]' if self.locked else ''} {self.event_title}"
 
     def upcoming(self, organisation):
         return self.filter(organisation=organisation, start__gte=timezone.now().replace(hour=0, minute=0, second=0),
