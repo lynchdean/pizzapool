@@ -54,6 +54,7 @@ class Event(models.Model):
     date = models.DateTimeField("date of event")
     description = models.CharField(max_length=200)
     servings_per_order = models.PositiveIntegerField(default=8, validators=[MinValueValidator(1)])
+    private = models.BooleanField(default=True)
     locked = models.BooleanField(default=False)
 
     def __str__(self):
