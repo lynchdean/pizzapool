@@ -6,8 +6,8 @@ from .models import Event, PizzaOrder, PizzaSlices, Organisation
 mock_img = SimpleUploadedFile(name='test_image.png', content=b"file data")
 
 
-def create_organisation(name="Test Org", description="org desc", tag_line="tag line", logo=mock_img, banner=mock_img):
-    return Organisation.objects.create(name=name, description=description, tag_line=tag_line, logo=logo, banner=banner)
+def create_organisation(name="Test Org", description="org desc", logo=mock_img):
+    return Organisation.objects.create(name=name, description=description, logo=logo)
 
 
 def create_event(organisation, event_title="Test Event", date=timezone.now(), description="desc",
