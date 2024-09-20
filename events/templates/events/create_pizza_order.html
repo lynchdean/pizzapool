@@ -2,11 +2,15 @@
 {% extends "./main_template.html" %}
 
 {% block content %}
+<style>
+    .invalid-feedback {
+        color: white;
+    }
+</style>
+
 <div class="container text-light p-3">
     {% if not event.locked %}
     <h3>New Pizza Order:</h3>
-    <!--    <div class="card">-->
-    <!--        <div class="card-body">-->
     {% load crispy_forms_tags %}
     <form class="my-class" method="post">
         {% csrf_token %}
@@ -18,15 +22,13 @@
             edit
             it once done.
         </div>
-        <input name="next" type="hidden" value="{{ request.GET.next }}">
+        <input class name="next" type="hidden" value="{{ request.GET.next }}">
         <div class="d-grid">
             <button class="btn btn-light rounded-pill mt-4" id="confirm-order-btn" type="submit">
                 Confirm
             </button>
         </div>
     </form>
-    <!--        </div>-->
-    <!--    </div>-->
     {% else %}
     <div class="alert alert-warning" role="alert">
         Event is locked.
