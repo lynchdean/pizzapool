@@ -6,8 +6,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 from django.db import models
 from django import forms
-from django.db.models import Sum, Value, UniqueConstraint
-from django.db.models.functions import Lower, Replace
+from django.db.models import Sum, UniqueConstraint
+from django.db.models.functions import Lower
 from django.forms import ModelForm
 from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 from django.template.defaultfilters import slugify
@@ -53,10 +53,11 @@ class Event(models.Model):
     event_title = models.CharField(max_length=100)
     date = models.DateTimeField("date of event")
     description = models.CharField(max_length=200)
+    servings_per_order = models.PositiveIntegerField(default=8, validators=[MinValueValidator(1)])
     locked = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{'[LOCKED]' if self.locked else ''}{self.event_title} - {self.date}"
+        return f"{'[LOCKED]' if self.locked else ''} {self.event_title} - {self.date}"
 
     def upcoming(self, organisation):
         return self.filter(organisation=organisation, start__gte=timezone.now().replace(hour=0, minute=0, second=0),
@@ -73,9 +74,7 @@ class PizzaOrder(models.Model):
     purchaser_revolut = models.CharField("Revolut username", max_length=16, validators=[alphanumeric])
     pizza_type = models.CharField(max_length=100)
     price_per_slice = models.DecimalField("Price per slice", max_digits=4, decimal_places=2)
-    available_slices = models.PositiveIntegerField(default=1, validators=[
-        MinValueValidator(1),
-        MaxValueValidator(8)])
+    available_slices = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
 
     def __str__(self) -> str:
         return f"{self.purchaser_name} - {self.pizza_type}, Event: {self.event}"
@@ -99,9 +98,28 @@ class PizzaOrder(models.Model):
     def event_is_locked(self):
         return self.event.locked
 
-    def save(self, *args, **kwargs):
+    def _validate_available_slices_maximum(self):
+        if self.available_slices >= self.event.servings_per_order:
+            raise ValidationError(
+                "Available slices cannot be greater than or equal to the total servings in the order.",
+                code="servings gte total servings")
+
+    def _validate_event_is_unlocked(self):
         if self.event_is_locked():
             raise ValidationError("Event is locked", code="locked")
+
+    def clean(self):
+        super().clean()
+        if self.event and self.available_slices:
+            if self.available_slices >= self.event.servings_per_order:
+                raise ValidationError({
+                    'available_slices': f"Available slices cannot be greater than or equal to "
+                                        f"{self.event.servings_per_order}."
+                })
+
+    def save(self, *args, **kwargs):
+        self._validate_available_slices_maximum()
+        self._validate_event_is_unlocked()
         super(PizzaOrder, self).save(*args, **kwargs)
 
 
