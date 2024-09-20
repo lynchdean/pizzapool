@@ -3,22 +3,6 @@
 {% load static %}
 
 {% block content %}
-
-<!--<div class="card rounded-pill" style="max-height: 210px; ">-->
-<!--    <div class="row g-0">-->
-<!--        <div class="col-4">-->
-<!--            <img alt="Organisation logo" class="img-thumbnail float-start rounded-pill border-0"-->
-<!--                 src="{{ event.organisation.logo.url }}" style="max-height: 200px;"/>-->
-<!--        </div>-->
-<!--        <div class="col-8 align-self-center text-end pe-4">-->
-<!--            <div class="card-body">-->
-<!--                <h5 class="display-5">{{ event.organisation.name }}</h5>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-
-
 <div class="container">
     <div class="row text-center pt-4">
         <img alt="Organisation logo" class="rounded-circle mx-auto d-block" src="{{ event.organisation.logo.url }}"
@@ -118,7 +102,8 @@
                    role="button">
                     Join Order</a>
                 {% else %}
-                <a class="btn btn-outline-danger text-center disabled" href="" id="order-full" role="button">Order
+                <a class="btn btn-outline-danger rounded-pill text-center disabled" href="" id="order-full"
+                   role="button">Order
                     Full</a>
                 {% endif %}
             </div>

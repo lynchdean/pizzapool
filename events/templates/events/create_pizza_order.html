@@ -5,26 +5,28 @@
 <div class="container text-light p-3">
     {% if not event.locked %}
     <h3>New Pizza Order:</h3>
-    <div class="card">
-        <div class="card-body">
-            {% load crispy_forms_tags %}
-            <form class="my-class" method="post">
-                {% csrf_token %}
-                {{ form|crispy }}
-                <div class="form-text mb-2">There's 8 slices in each pizza - don't forget to take away any you want to
-                    keep for yourself.
-                </div>
-                <div class="form-text mb-2"> Please make sure all details are correct before confirming, you cannot edit
-                    it once done.
-                </div>
-                <input name="next" type="hidden" value="{{ request.GET.next }}">
-                <div class="d-grid">
-                    <button class="btn btn-outline-danger rounded-pill" id="confirm-order-btn" type="submit">Confirm
-                    </button>
-                </div>
-            </form>
+    <!--    <div class="card">-->
+    <!--        <div class="card-body">-->
+    {% load crispy_forms_tags %}
+    <form class="my-class" method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="form-text text-light mt-4 mb-2">
+            There's 8 slices in each pizza - don't forget to take away any you want to keep for yourself.
         </div>
-    </div>
+        <div class="form-text text-light mb-2"> Please make sure all details are correct before confirming, you cannot
+            edit
+            it once done.
+        </div>
+        <input name="next" type="hidden" value="{{ request.GET.next }}">
+        <div class="d-grid">
+            <button class="btn btn-light rounded-pill mt-4" id="confirm-order-btn" type="submit">
+                Confirm
+            </button>
+        </div>
+    </form>
+    <!--        </div>-->
+    <!--    </div>-->
     {% else %}
     <div class="alert alert-warning" role="alert">
         Event is locked.
