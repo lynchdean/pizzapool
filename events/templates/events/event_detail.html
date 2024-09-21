@@ -18,6 +18,11 @@
         <h2 class="display-6">{{ event.event_title }}</h2>
         <p class="mb-0 mx-auto lead">{{ event.date }}</p>
     </div>
+    {% if event.description %}
+    <div class="row d-flex text-center text-light border-2 border-bottom px-4 mb-3">
+        <p>{{ event.description }}</p>
+    </div>
+    {% endif %}
 </div>
 
 <div class="container text-light mb-3">

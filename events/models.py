@@ -52,7 +52,7 @@ class Event(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     event_title = models.CharField(max_length=100)
     date = models.DateTimeField("date of event")
-    description = models.CharField(max_length=200)
+    description = models.CharField("Description (Optional)", max_length=200, blank=True)
     servings_per_order = models.PositiveIntegerField(default=8, validators=[MinValueValidator(1)])
     private = models.BooleanField(default=True)
     locked = models.BooleanField(default=False)
