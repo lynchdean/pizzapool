@@ -29,8 +29,8 @@ class OrgDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         today = timezone.now()
-        context['current_events'] = Event.objects.filter(organisation=self.object, date__gte=today)
-        context['past_events'] = Event.objects.filter(organisation=self.object, date__lt=today)
+        context['current_events'] = Event.objects.filter(organisation=self.object, private=False, date__gte=today)
+        context['past_events'] = Event.objects.filter(organisation=self.object, private=False, date__lt=today)
         return context
 
 
