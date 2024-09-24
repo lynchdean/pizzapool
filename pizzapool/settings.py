@@ -34,7 +34,6 @@ ADMINS = [parseaddr(email) for email in env.list('ADMINS')]
 # Application definition
 
 INSTALLED_APPS = [
-    'events.apps.EventsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,6 +44,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     "phonenumber_field",
+    'events.apps.EventsConfig',
 ]
 
 MIDDLEWARE = [
@@ -115,6 +115,9 @@ TIME_ZONE = 'Europe/Dublin'
 USE_I18N = True
 
 USE_TZ = True
+
+# Custom User Auth
+AUTH_USER_MODEL = 'events.User'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
