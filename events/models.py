@@ -1,8 +1,6 @@
-import re
 import uuid
 
-from django.contrib.auth import authenticate
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
 from django import forms
@@ -45,6 +43,14 @@ class Organisation(models.Model):
     def save(self, *args, **kwargs):
         self.path = slugify(self.name)
         super().save(*args, **kwargs)
+
+
+class User(AbstractUser):
+    organisation = models.ForeignKey(Organisation, null=True, on_delete=models.SET_NULL)
+    contact = PhoneNumberField("Phone/WhatsApp", null=False, blank=True)
+
+    def __str__(self):
+        return
 
 
 class Event(models.Model):
@@ -94,7 +100,7 @@ class PizzaOrder(models.Model):
 
     def get_total_remaining(self):
         """Returns the number of slices that have not been claimed from the order"""
-        return self.available_slices - self.get_total_claimed()
+        return int(self.available_slices) - self.get_total_claimed()
 
     def event_is_locked(self):
         return self.event.locked
@@ -175,19 +181,3 @@ class PizzaSlicesForm(ModelForm):
             self.fields['number_of_slices'].widget.attrs.update(
                 {'max': remaining},
             )
-
-
-class EventsAccessForm(AuthenticationForm):
-    def __init__(self, *args, **kwargs):
-        super(EventsAccessForm, self).__init__(*args, **kwargs)
-        self.fields.pop('username')
-
-    def clean(self):
-        super(EventsAccessForm, self).clean()
-        self.user_cache = authenticate(
-            self.request,
-            username='events-access',
-            password=self.cleaned_data.get('password')
-        )
-        if self.user_cache is None:
-            raise forms.ValidationError('Invalid password')

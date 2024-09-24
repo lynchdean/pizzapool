@@ -1,11 +1,10 @@
-from django.contrib.auth.views import LoginView
 from django.db.models import Sum
 from django.utils import timezone
 from django.views import generic
 from django.shortcuts import render, redirect
 from django.views.generic import DeleteView, ListView, TemplateView
 
-from .models import Organisation, Event, PizzaOrder, PizzaSlices, PizzaOrderForm, PizzaSlicesForm, EventsAccessForm
+from .models import Organisation, Event, PizzaOrder, PizzaSlices, PizzaOrderForm, PizzaSlicesForm
 
 
 class HomePage(TemplateView):
@@ -90,8 +89,3 @@ def claim_slices(request, path, pk):
     else:
         form = PizzaSlicesForm(initial={'pizza_order': pizza_order})
     return render(request, 'events/claim_slices.html', {'form': form, 'pizza_order': pizza_order})
-
-
-class EventsAccessView(LoginView):
-    authentication_form = EventsAccessForm
-    template_name = 'events/events_access.html'

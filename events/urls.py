@@ -5,7 +5,6 @@ from . import views
 app_name = "events"
 urlpatterns = [
     path('', views.HomePage.as_view(), name='home'),
-    path('events_access/', views.EventsAccessView.as_view(), name='events-access'),
     path('stats/', views.PizzaOrderStatsView.as_view(), name='stats'),
     path("orgs/", views.OrgIndexView.as_view(), name="org-index"),
     path("<slug:path>/", views.OrgDetailView.as_view(), name="org-detail"),
