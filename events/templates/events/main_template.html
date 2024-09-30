@@ -10,47 +10,44 @@
     <link href="{% static 'events/favicon-32x32.png' %}" rel="icon" sizes="32x32" type="image/png">
     <link href="{% static 'events/favicon-16x16.png' %}" rel="icon" sizes="16x16" type="image/png">
     <link href="{% static 'events/site.webmanifest' %}" rel="manifest">
+    <!--  css  -->
+    <link href="{% static 'events/style.css' %}" rel="stylesheet">
     <!--  ads  -->
     <script async crossorigin="anonymous"
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4985938341753226"></script>
-    <!--  /ads  -->
     <!--  fonts  -->
     <link href="https://fonts.googleapis.com" rel="preconnect">
     <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,600;1,600&display=swap"
           rel="stylesheet">
-    <!--  /fonts  -->
     {% load django_bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
 </head>
 <body>
-
-<style>
-    html, body {
-        height:100%;
-    }
-
-    body {
-        background: linear-gradient(0.9turn, #dc143b 50%, #ffa200);
-        background-repeat: no-repeat;
-        background-attachment: stretch;
-        background-color:#dc143b;
-    }
-</style>
-
 <div class="container">
-    <header class="d-flex flex-wrap  pt-3 mb-4 border-bottom border-2">
-        <a class="d-flex align-items-center text-center mb-3 pb-0.5 link-body-emphasis text-light text-decoration-none"
-           href="/">
-            <span class="fs-4" style="font-family: 'Montserrat', sans-serif; letter-spacing: 0.25rem;">pizzapool</span>
-        </a>
+    <nav class="navbar navbar-light text-light border-bottom border-2 mb-4">
+        <div class="container-fluid p-0 py-auto">
+            <a class="navbar-brand" href="/">
+                <span class="fs-4 align-middle text-light"
+                      style="font-family: 'Montserrat', sans-serif; letter-spacing: 0.25rem;">pizzapool</span>
+                <!--                <img alt="logo" class="d-inline-block my-auto" height="24"-->
+                <!--                     src="{% static 'events/img/logo_white.png' %}"-->
+                <!--                     width="24">-->
+            </a>
+            {% if user.is_authenticated %}
+            <a class="ms-auto text-light text-decoration-none" href="{% url 'events:user' user.username %}">
+                Hey {{ user.username }}!
+            </a>
+            {% else %}
+            <a class="btn btn-outline-light btn-sm rounded-pill ms-auto"
+               href="{% url 'events:login' %}?next={{request.path}}">Login</a>
+            {% endif %}
 
-        <!--        <ul class="nav nav-pills">-->
-        <!--            <li class="nav-item"><a class="nav-link" href="#"></a>Login</li>-->
-        <!--        </ul>-->
-    </header>
+        </div>
+    </nav>
 </div>
+
 
 <div class="container px-4">
     {% block content %}
