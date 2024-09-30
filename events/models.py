@@ -50,7 +50,7 @@ class OrgUser(AbstractUser):
     contact = PhoneNumberField("Phone/WhatsApp", null=False, blank=True)
 
     def __str__(self):
-        return f"{"[ADMIN] " if self.is_superuser else ""}{self.username}"
+        return f"{'[ADMIN] ' if self.is_superuser else ''}{self.username}"
 
 
 class Event(models.Model):
