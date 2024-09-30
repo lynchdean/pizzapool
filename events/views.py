@@ -4,7 +4,14 @@ from django.views import generic
 from django.shortcuts import render, redirect
 from django.views.generic import DeleteView, ListView, TemplateView
 
-from .models import Organisation, Event, PizzaOrder, PizzaSlices, PizzaOrderForm, PizzaSlicesForm
+from .models import OrgUser, Organisation, Event, PizzaOrder, PizzaSlices, PizzaOrderForm, PizzaSlicesForm
+
+
+class UserView(generic.DetailView):
+    model = OrgUser
+    slug_field = "username"
+    slug_url_kwarg = "username"
+    template_name = "events/user.html"
 
 
 class HomePage(TemplateView):

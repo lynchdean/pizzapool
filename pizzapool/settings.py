@@ -31,6 +31,10 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 ADMINS = [parseaddr(email) for email in env.list('ADMINS')]
 
+LOGIN_REDIRECT_URL = '/'  # Backup for next page = null
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/login'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -117,7 +121,7 @@ USE_I18N = True
 USE_TZ = True
 
 # Custom User Auth
-AUTH_USER_MODEL = 'events.User'
+AUTH_USER_MODEL = 'events.OrgUser'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/

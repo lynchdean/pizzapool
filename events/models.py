@@ -45,12 +45,12 @@ class Organisation(models.Model):
         super().save(*args, **kwargs)
 
 
-class User(AbstractUser):
+class OrgUser(AbstractUser):
     organisation = models.ForeignKey(Organisation, null=True, on_delete=models.SET_NULL)
     contact = PhoneNumberField("Phone/WhatsApp", null=False, blank=True)
 
     def __str__(self):
-        return
+        return f"{'[ADMIN] ' if self.is_superuser else ''}{self.username}"
 
 
 class Event(models.Model):

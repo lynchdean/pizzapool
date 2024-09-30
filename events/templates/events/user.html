@@ -1,0 +1,49 @@
+<!--# events/templates/events/user.html-->
+{% extends "events/main_template.html" %}
+
+{% block content %}
+<div class="container text-light border-bottom border-2 pb-3 mb-3">
+    <div class="row">
+        <div class="col">
+            <h4 class="display-6 pb-2">User details:</h4>
+        </div>
+        <div class="col text-end">
+            <form action="{% url 'events:logout' %}" method="post">
+                {% csrf_token %}
+                <button class="btn btn-outline-light rounded-pill mx-auto" type="submit">Log Out</button>
+            </form>
+        </div>
+    </div>
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Organisation:</strong> {{ user.organisation }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Phone/WhatsApp:</strong> {{ user.contact }}</p>
+</div>
+
+<div class="container text-light">
+
+    <h4 class="display-6 pb-2">Org Management:</h4>
+    {% if user.organisation %}
+
+
+    <div class="row">
+        <div class="col">
+            <p><strong>Name:</strong> {{ user.organisation.name }}</p>
+            <p><strong>Path:</strong> {{ request.get_host }}/{{ user.organisation.path }}/</p>
+            <p><strong>Description:</strong> {{ user.organisation.description }}</p>
+        </div>
+        <div class="col text-end">
+            <img alt="Organisation logo" class="rounded-circle" src="{{ user.organisation.logo.url }}"
+                 style="max-height: 100px; max-width: 100px;"/>
+        </div>
+    </div>
+
+
+    {% else %}
+    <p class="lead">This user is not linked to an organisation</p>
+    {% endif %}
+
+
+</div>
+
+{% endblock %}
