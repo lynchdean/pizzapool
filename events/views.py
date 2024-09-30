@@ -1,8 +1,7 @@
-from django.db.models import Sum
 from django.utils import timezone
 from django.views import generic
 from django.shortcuts import render, redirect
-from django.views.generic import DeleteView, ListView, TemplateView
+from django.views.generic import DeleteView, TemplateView
 
 from .models import OrgUser, Organisation, Event, PizzaOrder, PizzaSlices, PizzaOrderForm, PizzaSlicesForm
 
@@ -16,14 +15,6 @@ class UserView(generic.DetailView):
 
 class HomePage(TemplateView):
     template_name = "events/homepage.html"
-
-
-class OrgIndexView(generic.ListView):
-    template_name = "events/organisations_list.html"
-    context_object_name = "orgs_list"
-
-    def get_queryset(self):
-        return Organisation.objects.all()
 
 
 class OrgDetailView(generic.DetailView):
@@ -48,17 +39,6 @@ class EventView(generic.DetailView):
         context = super().get_context_data(**kwargs)
         pizza_orders = PizzaOrder.objects.filter(event=self.object)
         context['pizza_orders'] = pizza_orders
-        return context
-
-
-class PizzaOrderStatsView(ListView):
-    model = PizzaOrder
-    template_name = "events/stats.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["total_orders"] = PizzaOrder.objects.count()
-        context["total_slices"] = PizzaSlices.objects.aggregate(Sum('number_of_slices'))['number_of_slices__sum']
         return context
 
 

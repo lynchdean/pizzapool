@@ -37,7 +37,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
         self.org.delete()
 
     def test_page_title(self):
-        self.selenium.get(f"{self.live_server_url}/orgs/")
+        self.selenium.get(f"{self.live_server_url}/")
         self.assertIn('pizzapool', self.selenium.title)
 
     def test_org_page_exists(self):
