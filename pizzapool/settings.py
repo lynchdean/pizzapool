@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     "phonenumber_field",
+    'django_cleanup.apps.CleanupConfig',
     'events.apps.EventsConfig',
 ]
 

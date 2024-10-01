@@ -1,0 +1,18 @@
+<!--# events/templates/events/organisation_edit.html-->
+{% extends "events/main_template.html" %}
+
+{% block content %}
+<div class="container text-light">
+    <h4 class="display-6">{{ org.name }} - Edit Details:</h4>
+    {% load crispy_forms_tags %}
+    <form action="" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        {{ formset|crispy }}
+        <button class="btn btn-outline-light rounded-pill mt-4" id="confirm-order-btn" type="submit">
+            Update
+        </button>
+    </form>
+</div>
+{% endblock %}
+
+
