@@ -1,9 +1,12 @@
+from django.contrib.auth.decorators import login_required
+from django.http import Http404
 from django.utils import timezone
 from django.views import generic
 from django.shortcuts import render, redirect
 from django.views.generic import DeleteView, TemplateView
 
-from .models import OrgUser, Organisation, Event, PizzaOrder, PizzaSlices, PizzaOrderForm, PizzaSlicesForm
+from .models import OrgUser, Organisation, Event, PizzaOrder, PizzaSlices
+from .forms import PizzaOrderForm, PizzaSlicesForm, OrgEditForm
 
 
 class UserView(generic.DetailView):
@@ -29,6 +32,22 @@ class OrgDetailView(generic.DetailView):
         context['current_events'] = Event.objects.filter(organisation=self.object, private=False, date__gte=today)
         context['past_events'] = Event.objects.filter(organisation=self.object, private=False, date__lt=today)
         return context
+
+
+@login_required(login_url='login')
+def edit_organisation(request, path):
+    org = request.user.organisation
+    if org is None:
+        raise Http404("Your account is not linked to an organisation")
+    formset = OrgEditForm(instance=org)
+    if request.method == "POST":
+        formset = OrgEditForm(request.POST, request.FILES, instance=org)
+        if formset.is_valid():
+            formset.save()
+            return redirect("events:org-detail", path=path)
+
+    context = {'formset': formset, "org": org}
+    return render(request, 'events/organisation_edit.html', context)
 
 
 class EventView(generic.DetailView):

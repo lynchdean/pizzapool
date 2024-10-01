@@ -36,8 +36,8 @@
                 <!--                     width="24">-->
             </a>
             {% if user.is_authenticated %}
-            <a class="ms-auto text-light text-decoration-none" href="{% url 'events:user' user.username %}">
-                Hey {{ user.username }}!
+            <a class="btn btn-outline-light btn-sm rounded-pill ms-auto" href="{% url 'events:user' user.username %}">
+                Account: {{ user.username }}
             </a>
             {% else %}
             <a class="btn btn-outline-light btn-sm rounded-pill ms-auto"

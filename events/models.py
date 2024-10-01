@@ -3,10 +3,8 @@ import uuid
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
-from django import forms
 from django.db.models import Sum, UniqueConstraint
 from django.db.models.functions import Lower
-from django.forms import ModelForm
 from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 from django.template.defaultfilters import slugify
 from django.utils import timezone
@@ -100,7 +98,7 @@ class PizzaOrder(models.Model):
 
     def get_total_remaining(self):
         """Returns the number of slices that have not been claimed from the order"""
-        return int(self.available_slices) - self.get_total_claimed()
+        return self.available_slices - self.get_total_claimed()
 
     def event_is_locked(self):
         return self.event.locked
@@ -148,36 +146,3 @@ class PizzaSlices(models.Model):
             if self.number_of_slices > self.pizza_order.get_total_remaining():
                 raise ValidationError("Insufficient remaining slices", code="insufficient_slices")
         super(PizzaSlices, self).save(*args, **kwargs)
-
-
-class PizzaOrderForm(ModelForm):
-    class Meta:
-        model = PizzaOrder
-        fields = '__all__'
-        widgets = {'event': forms.HiddenInput()}
-        error_messages = {
-            'purchaser_whatsapp': {
-                'invalid': "Enter a valid phone number (e.g. 087 123 4567) or a number with an international call prefix.",
-            },
-        }
-
-
-class PizzaSlicesForm(ModelForm):
-    class Meta:
-        model = PizzaSlices
-        fields = "__all__"
-        widgets = {'pizza_order': forms.HiddenInput()}
-        error_messages = {
-            'buyer_whatsapp': {
-                'invalid': "Enter a valid phone number (e.g. 087 123 4567) or a number with an international call prefix.",
-            },
-        }
-
-    def __init__(self, *args, **kwargs):
-        super(PizzaSlicesForm, self).__init__(*args, **kwargs)
-        initial = kwargs.get('initial')
-        if initial:
-            remaining = initial['pizza_order'].get_total_remaining()
-            self.fields['number_of_slices'].widget.attrs.update(
-                {'max': remaining},
-            )

@@ -2,15 +2,23 @@
 {% extends "./main_template.html" %}
 
 {% block content %}
-<div class="container">
+<div class="container border-2 border-bottom pb-5 mb-3">
     <div class="row text-center pt-4">
         <img alt="Organisation logo" class="rounded-circle mx-auto d-block" src="{{ organisation.logo.url }}"
              style="max-height: 140px; max-width: 140px;"/>
     </div>
-    <div class="row text-center text-light border-2 border-bottom pb-5 mb-3">
+    <div class="row text-center text-light ">
         <h2 class="display-5">{{ organisation.name }}</h2>
         <h4 class="lead my-auto">{{ organisation.description }}</h4>
     </div>
+    {% if request.user.organisation == organisation %}
+    <div class="text-center pt-3">
+        <a class="btn btn-outline-light rounded-pill "
+           href="{% url 'events:org-edit' organisation.path %}">
+            Edit Organisation
+        </a>
+    </div>
+    {% endif %}
 </div>
 
 <h3 class="text-light">Upcoming events:</h3>
