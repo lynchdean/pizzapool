@@ -27,7 +27,7 @@
     <div class="list-group list-group-flush  ">
         {% for event in current_events %}
         <a class="list-group-item list-group-item-action px-2"
-           href="{% url 'events:event' organisation.path event.id %}">
+           href="{% url 'events:event' organisation.path event.sqid %}">
             {{ event.date|date:'F d, Y' }} - {{ event.event_title }} {{ event.locked|yesno:'🔒,'}}
         </a>
         {% endfor %}
@@ -44,7 +44,7 @@
     <div class="list-group list-group-flush rounded">
         {% for event in past_events %}
         <a class="list-group-item list-group-item-action"
-           href="{% url 'events:event' organisation.path event.id %}">
+           href="{% url 'events:event' organisation.path event.sqid %}">
             {{ event.date|date:'F d, Y' }} - {{ event.event_title }} {{ event.locked|yesno:'🔒,'}}
         </a>
         {% endfor %}
