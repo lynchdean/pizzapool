@@ -8,7 +8,9 @@ from django.db.models.functions import Lower
 from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 from django.template.defaultfilters import slugify
 from django.utils import timezone
+from django_sqids import SqidsField
 from phonenumber_field.modelfields import PhoneNumberField
+from sqids import Sqids
 
 alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')
 alphanumeric_hyphen_space = RegexValidator(
@@ -53,7 +55,7 @@ class OrgUser(AbstractUser):
 
 class Event(models.Model):
     organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE)
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    sqid = SqidsField(real_field_name="id", min_length=10, unique=True)
     event_title = models.CharField(max_length=100)
     date = models.DateTimeField("date of event")
     description = models.CharField("Description (Optional)", max_length=200, blank=True)

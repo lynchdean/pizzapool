@@ -53,6 +53,7 @@ def edit_organisation(request, path):
 class EventView(generic.DetailView):
     model = Event
     template_name = "events/event_detail.html"
+    slug_field = "sqid"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -73,13 +74,13 @@ class PizzaSlicesDeleteView(DeleteView):
             return "/events"
 
 
-def create_pizza_order(request, path, pk):
-    event = Event.objects.get(pk=pk)
+def create_pizza_order(request, path, slug):
+    event = Event.objects.get(sqid=slug)
     if request.method == 'POST':
         form = PizzaOrderForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("events:event", path=path, pk=pk)
+            return redirect("events:event", path=path, slug=slug)
     else:
         form = PizzaOrderForm(initial={'event': event})
     return render(request, 'events/create_pizza_order.html', {'form': form, 'event': event})
@@ -91,7 +92,7 @@ def claim_slices(request, path, pk):
         form = PizzaSlicesForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("events:event", path=path, pk=pizza_order.event.id)
+            return redirect("events:event", path=path, slug=pizza_order.event.sqid)
     else:
         form = PizzaSlicesForm(initial={'pizza_order': pizza_order})
     return render(request, 'events/claim_slices.html', {'form': form, 'pizza_order': pizza_order})
