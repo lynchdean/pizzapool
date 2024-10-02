@@ -14,18 +14,23 @@
         </div>
     </div>
 
-    <p class="lead mb-4">
-        pizzapool is a carpool-style pizza ordering web app.
-
-        This app was designed so that people could organise and pre-order a full pizza together rather than all
-        queuing in the restaurant individually (And saving some money too)
+    <p class="lead">
+        <strong>
+            pizzapool is a carpool-style pizza ordering web app.
+        </strong>
     </p>
-    <a aria-pressed="true" class="btn btn-outline-light rounded-pill"
-       href="{% url 'events:org-detail' 'example' %}"
-       id="orgs"
-       role="button">
-        Click here to test out an example page
-    </a>
+    <p class="mb-4">
+        This app was designed so that people could organise and pre-order a full pizza together rather than all
+        queuing in the restaurant to order individual slices (And saving some money too)
+    </p>
+    <div class="text-center">
+        <a aria-pressed="true" class="btn btn-outline-light rounded-pill"
+           href="{% url 'events:org-detail' 'example' %}"
+           id="orgs"
+           role="button">
+            Click here to test out an example page
+        </a>
+    </div>
 </div>
 
 
