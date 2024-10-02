@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import FileInput, ImageField
 
-from events.models import Organisation, PizzaOrder, PizzaSlices
+from events.models import Organisation, PizzaOrder, PizzaSlices, Event
 
 
 class OrgEditForm(forms.ModelForm):
@@ -10,6 +10,13 @@ class OrgEditForm(forms.ModelForm):
     class Meta:
         model = Organisation
         fields = ['description', 'logo']
+
+
+class EventEditForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        fields = '__all__'
+        exclude = ['organisation', 'servings_per_order']
 
 
 class PizzaOrderForm(forms.ModelForm):

@@ -17,6 +17,15 @@
     <div class="row d-flex text-center text-light border-2 border-bottom pb-5 mb-3">
         <h2 class="display-6">{{ event.event_title }}</h2>
         <p class="mb-0 mx-auto lead">{{ event.date }}</p>
+
+        {% if request.user.organisation == event.organisation %}
+        <div class="text-center pt-3">
+            <a class="btn btn-outline-light rounded-pill "
+               href="{% url 'events:event-edit' event.organisation.path event.sqid %}">
+                Edit Event
+            </a>
+        </div>
+        {% endif %}
     </div>
     {% if event.description %}
     <div class="row d-flex text-center text-light border-2 border-bottom px-4 mb-3">
