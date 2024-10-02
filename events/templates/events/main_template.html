@@ -31,9 +31,9 @@
             <a class="navbar-brand" href="/">
                 <span class="fs-4 align-middle text-light"
                       style="font-family: 'Montserrat', sans-serif; letter-spacing: 0.25rem;">pizzapool</span>
-                <!--                <img alt="logo" class="d-inline-block my-auto" height="24"-->
-                <!--                     src="{% static 'events/img/logo_white.png' %}"-->
-                <!--                     width="24">-->
+                <img alt="logo" class="d-inline-block my-auto" height="24"
+                     src="{% static 'events/img/logo_white.png' %}"
+                     width="24">
             </a>
             {% if user.is_authenticated %}
             <a class="btn btn-outline-light btn-sm rounded-pill ms-auto" href="{% url 'events:user' user.username %}">

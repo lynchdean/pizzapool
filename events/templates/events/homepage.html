@@ -1,21 +1,36 @@
 <!--# events/templates/events/homepage.html-->
 {% extends "./main_template.html" %}
 
+{% load static %}
 {% block content %}
 <div class="container text-light p-3">
-    <div class="display-4 mb-3">What is pizzapool?</div>
-    <p class="mb-4">
-        pizzapool is a carpool-style pizza ordering web app.
+    <div class="row align-items-start mb-5">
+        <div class="col-6 mb-0">
+            <div class="display-4">What is</div>
+            <div class="display-4">pizzapool?</div>
+        </div>
+        <div class="col-4 ms-auto">
+            <img alt="logo" class="img-fluid" src="{% static 'events/img/logo3_white.png' %}">
+        </div>
+    </div>
 
-        This app was designed so that people could organise and pre-order a full pizza together rather than all
-        queuing in the restaurant individually (And saving some money too)
+    <p class="lead">
+        <strong>
+            pizzapool is a carpool-style pizza ordering web app.
+        </strong>
     </p>
-    <a aria-pressed="true" class="btn btn-outline-light rounded-pill"
-       href="{% url 'events:org-detail' 'example' %}"
-       id="orgs"
-       role="button">
-        Click here to test out an example page
-    </a>
+    <p class="mb-4">
+        This app was designed so that people could organise and pre-order a full pizza together rather than all
+        queuing in the restaurant to order individual slices (And saving some money too)
+    </p>
+    <div class="text-center">
+        <a aria-pressed="true" class="btn btn-outline-light rounded-pill"
+           href="{% url 'events:org-detail' 'example' %}"
+           id="orgs"
+           role="button">
+            Click here to test out an example page
+        </a>
+    </div>
 </div>
 
 
