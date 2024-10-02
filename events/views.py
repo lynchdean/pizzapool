@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import DeleteView, TemplateView
 
 from .models import OrgUser, Organisation, Event, PizzaOrder, PizzaSlices
-from .forms import PizzaOrderForm, PizzaSlicesForm, OrgEditForm
+from .forms import PizzaOrderForm, PizzaSlicesForm, OrgEditForm, EventEditForm
 
 
 class UserView(generic.DetailView):
@@ -40,7 +40,7 @@ def edit_organisation(request, path):
     if org is None:
         raise Http404("Your account is not linked to an organisation")
     formset = OrgEditForm(instance=org)
-    if request.method == "POST":
+    if request.method == 'POST':
         formset = OrgEditForm(request.POST, request.FILES, instance=org)
         if formset.is_valid():
             formset.save()
@@ -60,6 +60,26 @@ class EventView(generic.DetailView):
         pizza_orders = PizzaOrder.objects.filter(event=self.object)
         context['pizza_orders'] = pizza_orders
         return context
+
+
+@login_required(login_url='login')
+def edit_event(request, path, slug):
+    org = request.user.organisation
+    event = Event.objects.get(sqid=slug)
+    if org is None:
+        raise Http404("Your account is not linked to an organisation")
+    if org != event.organisation:
+        raise Http404("This event is not part of your organisation")
+
+    formset = EventEditForm(instance=event)
+    if request.method == "POST":
+        formset = EventEditForm(request.POST, request.FILES, instance=event)
+        if formset.is_valid():
+            formset.save()
+            return redirect("events:event", path=path, slug=slug)
+
+    context = {'formset': formset, "event": event}
+    return render(request, 'events/event_edit.html', context)
 
 
 class PizzaSlicesDeleteView(DeleteView):

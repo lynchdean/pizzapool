@@ -13,6 +13,7 @@ urlpatterns = [
     path("<slug:path>/", views.OrgDetailView.as_view(), name="org-detail"),
     path("<slug:path>/edit/", views.edit_organisation, name="org-edit"),
     path("<slug:path>/<slug>/", views.EventView.as_view(), name="event"),
+    path("<slug:path>/<slug>/edit/", views.edit_event, name="event-edit"),
     path("<slug:path>/<slug>/create-order/", views.create_pizza_order, name='create-pizza-order'),
     path("<slug:path>/<int:pk>/claim/", views.claim_slices, name='claim-slices'),
     path("<slug:path>/<int:pk>/delete/", views.PizzaSlicesDeleteView.as_view(), name='delete-slices'),
