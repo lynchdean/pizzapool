@@ -1,10 +1,20 @@
 <!--# events/templates/events/homepage.html-->
 {% extends "./main_template.html" %}
 
+{% load static %}
 {% block content %}
 <div class="container text-light p-3">
-    <div class="display-4 mb-3">What is pizzapool?</div>
-    <p class="mb-4">
+    <div class="row align-items-start mb-5">
+        <div class="col-6 mb-0">
+            <div class="display-4">What is</div>
+            <div class="display-4">pizzapool?</div>
+        </div>
+        <div class="col-4 ms-auto">
+            <img alt="logo" class="img-fluid" src="{% static 'events/img/logo3_white.png' %}">
+        </div>
+    </div>
+
+    <p class="lead mb-4">
         pizzapool is a carpool-style pizza ordering web app.
 
         This app was designed so that people could organise and pre-order a full pizza together rather than all
