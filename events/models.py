@@ -59,7 +59,8 @@ class Event(models.Model):
     event_title = models.CharField(max_length=100)
     date = models.DateTimeField("date of event")
     description = models.CharField("Description (Optional)", max_length=200, blank=True)
-    servings_per_order = models.PositiveIntegerField(default=8, validators=[MinValueValidator(1)])
+    servings_per_order = models.PositiveIntegerField("Servings per order (Cannot be changed later)", default=8,
+                                                     validators=[MinValueValidator(1)])
     private = models.BooleanField(default=True)
     locked = models.BooleanField(default=False)
 
