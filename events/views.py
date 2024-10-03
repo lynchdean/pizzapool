@@ -28,9 +28,16 @@ class OrgDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        user = self.request.user
         today = timezone.now()
-        context['current_events'] = Event.objects.filter(organisation=self.object, private=False, date__gte=today)
-        context['past_events'] = Event.objects.filter(organisation=self.object, private=False, date__lt=today)
+        filter_kwargs_gte = dict(organisation=self.object, date__gte=today)
+        filter_kwargs_lt = dict(organisation=self.object, date__lt=today)
+        if user.is_anonymous or self.object != user.organisation:
+            filter_kwargs_gte['private'] = False
+            filter_kwargs_lt['private'] = False
+        else:
+            context['current_events'] = Event.objects.filter(**filter_kwargs_gte)
+            context['past_events'] = Event.objects.filter(**filter_kwargs_lt)
         return context
 
 
