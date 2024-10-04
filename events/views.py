@@ -1,5 +1,7 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import Http404
+from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views import generic
 from django.shortcuts import render, redirect
@@ -35,9 +37,9 @@ class OrgDetailView(generic.DetailView):
         if user.is_anonymous or self.object != user.organisation:
             filter_kwargs_gte['private'] = False
             filter_kwargs_lt['private'] = False
-        else:
-            context['current_events'] = Event.objects.filter(**filter_kwargs_gte)
-            context['past_events'] = Event.objects.filter(**filter_kwargs_lt)
+
+        context['current_events'] = Event.objects.filter(**filter_kwargs_gte)
+        context['past_events'] = Event.objects.filter(**filter_kwargs_lt)
         return context
 
 
@@ -60,7 +62,6 @@ def edit_organisation(request, path):
 class EventView(generic.DetailView):
     model = Event
     template_name = "events/event_detail.html"
-    slug_field = "sqid"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -72,7 +73,7 @@ class EventView(generic.DetailView):
 @login_required(login_url='login')
 def edit_event(request, path, slug):
     org = request.user.organisation
-    event = Event.objects.get(sqid=slug)
+    event = Event.objects.get(slug=slug)
     if org is None:
         raise Http404("Your account is not linked to an organisation")
     if org != event.organisation:
@@ -83,34 +84,57 @@ def edit_event(request, path, slug):
         formset = EventEditForm(request.POST, request.FILES, instance=event)
         if formset.is_valid():
             formset.save()
-            return redirect("events:event", path=path, slug=slug)
+            return redirect("events:event-detail", path=path, slug=slug)
 
     context = {'formset': formset, "event": event}
     return render(request, 'events/event_edit.html', context)
 
 
-class PizzaSlicesDeleteView(DeleteView):
-    model = PizzaSlices
-    template_name = "events/delete_slices.html"
+class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Event
+    template_name = "events/event_delete.html"
+
+    def test_func(self):
+        event = self.get_object()
+        return self.request.user.organisation == event.organisation
+
+    def handle_no_permission(self):
+        event = self.get_object()
+        return redirect("events:event-detail", path=event.organisation.path, slug=event.slug)
 
     def get_success_url(self):
-        next_url = self.request.GET.get('next')
-        if next_url:
-            return next_url
-        else:
-            return "/events"
+        event = self.get_object()
+        return reverse_lazy("events:org-detail", kwargs={"path": event.organisation.path})
 
 
 def create_pizza_order(request, path, slug):
-    event = Event.objects.get(sqid=slug)
+    event = Event.objects.get(slug=slug)
     if request.method == 'POST':
         form = PizzaOrderForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("events:event", path=path, slug=slug)
+            return redirect("events:event-detail", path=path, slug=slug)
     else:
         form = PizzaOrderForm(initial={'event': event})
     return render(request, 'events/create_pizza_order.html', {'form': form, 'event': event})
+
+
+class OrderDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = PizzaOrder
+    template_name = "events/order_delete.html"
+
+    def test_func(self):
+        order = self.get_object()
+        return self.request.user.organisation == order.event.organisation
+
+    def handle_no_permission(self):
+        order = self.get_object()
+        return redirect("events:event-detail", path=order.event.organisation.path, slug=order.event.slug)
+
+    def get_success_url(self):
+        order = self.get_object()
+        return reverse_lazy("events:event-detail",
+                            kwargs={"path": order.event.organisation.path, "slug": order.event.slug})
 
 
 def claim_slices(request, path, pk):
@@ -119,7 +143,19 @@ def claim_slices(request, path, pk):
         form = PizzaSlicesForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("events:event", path=path, slug=pizza_order.event.sqid)
+            return redirect("events:event-detail", path=path, slug=pizza_order.event.slug)
     else:
         form = PizzaSlicesForm(initial={'pizza_order': pizza_order})
     return render(request, 'events/claim_slices.html', {'form': form, 'pizza_order': pizza_order})
+
+
+class PizzaSlicesDeleteView(DeleteView):
+    model = PizzaSlices
+    template_name = "events/delete_slices.html"
+
+    def get_success_url(self):
+        slices = self.get_object()
+        return reverse_lazy("events:event-detail", kwargs={
+            "path": slices.pizza_order.event.organisation.path,
+            "slug": slices.pizza_order.event.slug
+        })

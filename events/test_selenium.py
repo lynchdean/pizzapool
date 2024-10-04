@@ -1,6 +1,5 @@
 from decimal import Decimal
 
-from django.contrib.auth.models import User
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver import ActionChains
 
@@ -46,7 +45,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
 
     def test_order_creation(self):
         # Event page
-        self.selenium.get(f'{self.live_server_url}/{self.org_path}/{self.event.sqid}/')
+        self.selenium.get(f'{self.live_server_url}/{self.org_path}/{self.event.slug}/')
         new_order_btn = self.selenium.find_element(By.ID, "create-order-btn")
         new_order_btn.click()
 
@@ -70,7 +69,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
 
         # Check returned to Event page
         url = self.selenium.current_url
-        self.assertEqual(url, f'{self.live_server_url}/{self.org_path}/{self.event.sqid}/')
+        self.assertEqual(url, f'{self.live_server_url}/{self.org_path}/{self.event.slug}/')
 
         # Check order is created in database
         order = PizzaOrder.objects.filter(event=self.event)[0]
@@ -86,7 +85,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
         order = create_order(event=self.event)
 
         # Event page
-        self.selenium.get(f'{self.live_server_url}/{self.org_path}/{self.event.sqid}/')
+        self.selenium.get(f'{self.live_server_url}/{self.org_path}/{self.event.slug}/')
         # self.selenium.implicitly_wait(10)
         join_order_btn = self.selenium.find_element(By.ID, "join-order-btn")
         join_order_btn.click()
@@ -105,7 +104,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
 
         # Check returned to Event page
         url = self.selenium.current_url
-        self.assertEqual(url, f'{self.live_server_url}/{self.org_path}/{self.event.sqid}/')
+        self.assertEqual(url, f'{self.live_server_url}/{self.org_path}/{self.event.slug}/')
 
         # Check order joined in database
         slices = PizzaSlices.objects.filter(pizza_order=order)[0]
@@ -121,7 +120,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
         self.assertTrue(PizzaSlices.objects.filter(pizza_order=order).count() == 1)
 
         # Event page
-        self.selenium.get(f'{self.live_server_url}/{self.org_path}/{self.event.sqid}/')
+        self.selenium.get(f'{self.live_server_url}/{self.org_path}/{self.event.slug}/')
         remove_slices_link = self.selenium.find_elements(By.ID, "remove-slices")[0]
         remove_slices_link.click()
 
@@ -130,8 +129,9 @@ class MySeleniumTests(StaticLiveServerTestCase):
         remove_slices.click()
 
         # Check returned to Event page
+        self.selenium.implicitly_wait(2)
         url = self.selenium.current_url
-        self.assertEqual(url, f'{self.live_server_url}/{self.org_path}/{self.event.sqid}/')
+        self.assertEqual(url, f'{self.live_server_url}/{self.org_path}/{self.event.slug}/')
 
         # Check slices are deleted from order
         self.assertTrue(PizzaSlices.objects.filter(pizza_order=order).count() == 0)
@@ -140,7 +140,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
         order = create_order(event=self.event, available_slices=1)
 
         # Event page
-        self.selenium.get(f'{self.live_server_url}/{self.org_path}/{self.event.sqid}/')
+        self.selenium.get(f'{self.live_server_url}/{self.org_path}/{self.event.slug}/')
         self.assertTrue(len(self.selenium.find_elements(By.ID, "join-order-btn")) > 0)
 
         # Add slices to fill order
@@ -158,7 +158,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
         self.event.save()
 
         # Event page
-        self.selenium.get(f'{self.live_server_url}/{self.org_path}/{self.event.sqid}/')
+        self.selenium.get(f'{self.live_server_url}/{self.org_path}/{self.event.slug}/')
         self.assertTrue(len(self.selenium.find_elements(By.ID, "new-orders-locked")) > 0)
         self.assertTrue(len(self.selenium.find_elements(By.ID, "new-slices-locked")) > 0)
         self.assertTrue(len(self.selenium.find_elements(By.ID, "remove-slices")) == 0)

@@ -8,9 +8,14 @@
     <form action="" enctype="multipart/form-data" method="post">
         {% csrf_token %}
         {{ formset|crispy }}
-        <button class="btn btn-outline-light rounded-pill mt-4" id="confirm-order-btn" type="submit">
-            Update
-        </button>
+        <div class="text-end mt-4">
+            <a class="btn btn-outline-light rounded-pill" href="{% url 'events:org-detail' org.path %}">
+                Cancel
+            </a>
+            <button class="btn btn-outline-light rounded-pill ms-2" id="confirm-order-btn" type="submit">
+                Update
+            </button>
+        </div>
     </form>
 </div>
 {% endblock %}

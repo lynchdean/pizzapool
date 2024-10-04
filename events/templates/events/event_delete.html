@@ -1,0 +1,23 @@
+<!--# events/templates/events/event_delete.html-->
+{% extends "events/main_template.html" %}
+
+{% block content %}
+    <div class="container text-light">
+        <form method="post">{% csrf_token %}
+            <p><strong>Are you sure you want to delete:</strong></p>
+            <p><strong>"{{ object }}"?<</strong></p>
+            <p><strong>This can't be undone</strong></p>
+            {{ form }}
+            <div class="text-end mt-4">
+                <button class="btn btn-outline-light rounded-pill" id="update-event-btn" type="submit">
+                    Confirm
+                </button>
+                <a class="btn btn-outline-light rounded-pill ms-2"
+                   href="{% url 'events:event-detail' object.organisation.path object.slug %}">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
