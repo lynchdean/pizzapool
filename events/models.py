@@ -55,7 +55,7 @@ class OrgUser(AbstractUser):
 
 class Event(models.Model):
     organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE)
-    sqid = SqidsField(real_field_name="id", min_length=10, unique=True)
+    slug = SqidsField(real_field_name="id", min_length=10, unique=True)
     event_title = models.CharField(max_length=100)
     date = models.DateTimeField("date of event")
     description = models.CharField("Description (Optional)", max_length=200, blank=True)
@@ -85,7 +85,7 @@ class PizzaOrder(models.Model):
     available_slices = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
 
     def __str__(self) -> str:
-        return f"{self.purchaser_name} - {self.pizza_type}, Event: {self.event}"
+        return f"{self.purchaser_name} - {self.pizza_type}"
 
     def matched_slices(self):
         """Returns PizzaSlices linked with this order, returns empty queryset if no slices are linked"""
