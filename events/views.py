@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import Http404
@@ -8,7 +9,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import DeleteView, TemplateView
 
 from .models import OrgUser, Organisation, Event, PizzaOrder, PizzaSlices
-from .forms import PizzaOrderForm, PizzaSlicesForm, OrgEditForm, EventEditForm
+from .forms import PizzaOrderForm, PizzaSlicesForm, OrgEditForm, EventEditForm, EventCreateForm
 
 
 class UserView(generic.DetailView):
@@ -41,6 +42,24 @@ class OrgDetailView(generic.DetailView):
         context['current_events'] = Event.objects.filter(**filter_kwargs_gte)
         context['past_events'] = Event.objects.filter(**filter_kwargs_lt)
         return context
+
+
+class EventCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Event
+    form_class = EventCreateForm
+    template_name = "events/event_create.html"
+
+    def form_valid(self, form):
+        form.instance.organisation = self.request.user.organisation
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['org'] = self.request.user.organisation
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy("events:org-detail", kwargs={"path": self.request.user.organisation.path})
 
 
 @login_required(login_url='login')

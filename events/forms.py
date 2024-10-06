@@ -3,6 +3,8 @@ from django.forms import FileInput, ImageField
 
 from events.models import Organisation, PizzaOrder, PizzaSlices, Event
 
+from .widgets import DateTimeInput
+
 
 class OrgEditForm(forms.ModelForm):
     logo = ImageField(widget=FileInput)
@@ -10,6 +12,21 @@ class OrgEditForm(forms.ModelForm):
     class Meta:
         model = Organisation
         fields = ['description', 'logo']
+
+
+class EventCreateForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        fields = ['name', 'date', 'description', 'servings_per_order', 'private', 'locked']
+        widgets = {
+            'date': DateTimeInput(),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(EventCreateForm, self).__init__(*args, **kwargs)
+        self.fields['servings_per_order'].widget.attrs.update(
+            {'min': 1},
+        )
 
 
 class EventEditForm(forms.ModelForm):

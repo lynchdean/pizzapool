@@ -10,9 +10,9 @@ def create_organisation(name="Test Org", description="org desc", logo=mock_img):
     return Organisation.objects.create(name=name, description=description, logo=logo)
 
 
-def create_event(organisation, event_title="Test Event", date=timezone.now(), description="desc", servings_per_order=8,
+def create_event(organisation, name="Test Event", date=timezone.now(), description="desc", servings_per_order=8,
                  locked=False):
-    return Event.objects.create(organisation=organisation, event_title=event_title, date=date, description=description,
+    return Event.objects.create(organisation=organisation, name=name, date=date, description=description,
                                 servings_per_order=servings_per_order, locked=locked)
 
 

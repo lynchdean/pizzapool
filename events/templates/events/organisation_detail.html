@@ -2,55 +2,66 @@
 {% extends "./main_template.html" %}
 
 {% block content %}
-<div class="container border-2 border-bottom pb-5 mb-3">
-    <div class="row text-center pt-4">
-        <img alt="Organisation logo" class="mx-auto d-block" src="{{ organisation.logo.url }}"
-             style="max-height: 140px; max-width: 140px;"/>
+    <div class="container border-2 border-bottom pb-5 mb-3">
+        <div class="row text-center pt-4">
+            <img alt="Organisation logo" class="mx-auto d-block" src="{{ organisation.logo.url }}"
+                 style="max-height: 140px; max-width: 140px;"/>
+        </div>
+        <div class="row text-center text-light ">
+            <h2 class="display-5">{{ organisation.name }}</h2>
+            <h4 class="lead my-auto">{{ organisation.description }}</h4>
+        </div>
     </div>
-    <div class="row text-center text-light ">
-        <h2 class="display-5">{{ organisation.name }}</h2>
-        <h4 class="lead my-auto">{{ organisation.description }}</h4>
-    </div>
+
+
+
     {% if request.user.organisation == organisation %}
-    <div class="text-center pt-3">
-        <a class="btn btn-outline-light rounded-pill "
-           href="{% url 'events:org-edit' organisation.path %}">
-            Edit Organisation
-        </a>
-    </div>
+        <div class="container border-2 border-bottom pb-3 mb-3">
+            <h4 class="text-light text-center">Admin Actions:</h4>
+            <div class="text-center">
+                <a class="btn btn-outline-light rounded-pill "
+                   href="{% url 'events:org-edit' organisation.path %}">
+                    Edit Organisation
+                </a>
+                <a class="btn btn-outline-light rounded-pill ms-2"
+                   href="{% url 'events:event-create' organisation.path %}">
+                    Create Event
+                </a>
+            </div>
+        </div>
     {% endif %}
-</div>
 
-<h3 class="text-light">Upcoming events:</h3>
-{% if current_events %}
-<div class="card rounded p-2 ">
-    <div class="list-group list-group-flush  ">
-        {% for event in current_events %}
-        <a class="list-group-item list-group-item-action px-2"
-           href="{% url 'events:event-detail' organisation.path event.slug %}">
-            {{ event.date|date:'F d, Y' }} - {{ event.event_title }} {{ event.locked|yesno:'🔒,'}}
-        </a>
-        {% endfor %}
-    </div>
-</div>
 
-{% else %}
-<p class="text-light">There are no upcoming public events.</p>
-{% endif %}
+    <h3 class="text-light">Upcoming events:</h3>
+    {% if current_events %}
+        <div class="card rounded p-2 ">
+            <div class="list-group list-group-flush  ">
+                {% for event in current_events %}
+                    <a class="list-group-item list-group-item-action px-2"
+                       href="{% url 'events:event-detail' organisation.path event.slug %}">
+                        {{ event.date|date:'F d, Y' }} - {{ event.name }} {{ event.locked|yesno:'🔒,' }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
 
-<h3 class="text-light mt-3">Past events:</h3>
-{% if past_events %}
-<div class="card rounded p-2 ">
-    <div class="list-group list-group-flush rounded">
-        {% for event in past_events %}
-        <a class="list-group-item list-group-item-action"
-           href="{% url 'events:event-detail' organisation.path event.slug %}">
-            {{ event.date|date:'F d, Y' }} - {{ event.event_title }} {{ event.locked|yesno:'🔒,'}}
-        </a>
-        {% endfor %}
-    </div>
-</div>
-{% else %}
-<p class="text-light">There are no past public events</p>
-{% endif %}
+    {% else %}
+        <p class="text-light">There are no upcoming public events.</p>
+    {% endif %}
+
+    <h3 class="text-light mt-3">Past events:</h3>
+    {% if past_events %}
+        <div class="card rounded p-2 ">
+            <div class="list-group list-group-flush rounded">
+                {% for event in past_events %}
+                    <a class="list-group-item list-group-item-action"
+                       href="{% url 'events:event-detail' organisation.path event.slug %}">
+                        {{ event.date|date:'F d, Y' }} - {{ event.name }} {{ event.locked|yesno:'🔒,' }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <p class="text-light">There are no past public events</p>
+    {% endif %}
 {% endblock %}

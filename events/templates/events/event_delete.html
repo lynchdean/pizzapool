@@ -5,7 +5,7 @@
     <div class="container text-light">
         <form method="post">{% csrf_token %}
             <p><strong>Are you sure you want to delete:</strong></p>
-            <p><strong>"{{ object }}"?<</strong></p>
+            <p><strong>"{{ object }}"?</strong></p>
             <p><strong>This can't be undone</strong></p>
             {{ form }}
             <div class="text-end mt-4">

@@ -10,8 +10,6 @@
     <link href="{% static 'events/favicon-32x32.png' %}" rel="icon" sizes="32x32" type="image/png">
     <link href="{% static 'events/favicon-16x16.png' %}" rel="icon" sizes="16x16" type="image/png">
     <link href="{% static 'events/site.webmanifest' %}" rel="manifest">
-    <!--  css  -->
-    <link href="{% static 'events/style.css' %}" rel="stylesheet">
     <!--  ads  -->
     <script async crossorigin="anonymous"
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4985938341753226"></script>
@@ -45,12 +43,13 @@
                      width="24">
             </a>
             {% if user.is_authenticated %}
-            <a class="btn btn-outline-light btn-sm rounded-pill ms-auto" href="{% url 'events:user' user.username %}">
-                Account: {{ user.username }}
-            </a>
+                <a class="btn btn-outline-light btn-sm rounded-pill ms-auto"
+                   href="{% url 'events:user' user.username %}">
+                    Account: {{ user.username }}
+                </a>
             {% else %}
-            <a class="btn btn-outline-light btn-sm rounded-pill ms-auto"
-               href="{% url 'events:login' %}?next={{request.path}}">Login</a>
+                <a class="btn btn-outline-light btn-sm rounded-pill ms-auto"
+                   href="{% url 'events:login' %}?next={{ request.path }}">Login</a>
             {% endif %}
 
         </div>
