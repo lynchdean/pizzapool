@@ -2,33 +2,33 @@
 {% extends "events/main_template.html" %}
 
 {% block content %}
-<div class="container text-light">
-    <div class="border-bottom border-2 pb-3">
-        <h4 class="display-6">{{ event.event_title }}, {{ event.date}} - Edit Details:</h4>
-        {% load crispy_forms_tags %}
-        <form enctype="multipart/form-data" id="update-event-form" method="post">
-            {% csrf_token %}
-            {{ formset|crispy }}
-            <div class="row mt-5">
-                <div class="col-5">
-                    <a class="btn text-light ps-0"
-                       href="{% url 'events:event-delete' event.organisation.path event.slug %}">
-                        Delete Event
-                    </a>
+    <div class="container text-light">
+        <div class="border-bottom border-2 pb-3">
+            <h4 class="display-6">{{ event.name }}, {{ event.date }} - Edit Details:</h4>
+            {% load crispy_forms_tags %}
+            <form enctype="multipart/form-data" id="update-event-form" method="post">
+                {% csrf_token %}
+                {{ formset|crispy }}
+                <div class="row mt-5">
+                    <div class="col-5">
+                        <a class="btn text-light ps-0"
+                           href="{% url 'events:event-delete' event.organisation.path event.slug %}">
+                            Delete Event
+                        </a>
+                    </div>
+                    <div class="col-7 text-end">
+                        <button class="btn btn-outline-light rounded-pill" id="update-event-btn" type="submit">
+                            Update
+                        </button>
+                        <a class="btn btn-outline-light rounded-pill ms-2"
+                           href="{% url 'events:event-detail' event.organisation.path event.slug %}">
+                            Cancel
+                        </a>
+                    </div>
                 </div>
-                <div class="col-7 text-end">
-                    <button class="btn btn-outline-light rounded-pill" id="update-event-btn" type="submit">
-                        Update
-                    </button>
-                    <a class="btn btn-outline-light rounded-pill ms-2"
-                       href="{% url 'events:event-detail' event.organisation.path event.slug %}">
-                        Cancel
-                    </a>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
 {% endblock %}
 
 

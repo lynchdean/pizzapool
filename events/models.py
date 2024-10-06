@@ -56,7 +56,7 @@ class OrgUser(AbstractUser):
 class Event(models.Model):
     organisation = models.ForeignKey(Organisation, on_delete=models.CASCADE)
     slug = SqidsField(real_field_name="id", min_length=10, unique=True)
-    event_title = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
     date = models.DateTimeField("date of event")
     description = models.CharField("Description (Optional)", max_length=200, blank=True)
     servings_per_order = models.PositiveIntegerField("Servings per order (Cannot be changed later)", default=8,
@@ -65,7 +65,7 @@ class Event(models.Model):
     locked = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.organisation} - {self.date}: {'[LOCKED]' if self.locked else ''} {self.event_title}"
+        return f"{self.organisation} - {self.date}: {'[LOCKED]' if self.locked else ''} {self.name}"
 
     def upcoming(self, organisation):
         return self.filter(organisation=organisation, start__gte=timezone.now().replace(hour=0, minute=0, second=0),
