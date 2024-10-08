@@ -1,4 +1,8 @@
 # 🍕 Pizzapool 
+
+### Please note: pizzapool will be undergoing server migration to an EU hosted server within the next day or two, and may be temporarily unavailable at pizzapool.pythonanywere.com
+### pizzapool.app will be the new home of the site once this migration has been completed!
+
 ## A carpool-style pizza ordering web app.
 
 This app was designed so that people could organise and pre-order a full pizza together rather than all queuing in the restaurant individually. (And saving some money too)
