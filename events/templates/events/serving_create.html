@@ -11,13 +11,13 @@
                 {{ form|crispy }}
                 <input name="next" type="hidden" value="{{ request.GET.next }}">
                 <div class="text-end mt-4">
-                    <button class="btn btn-outline-light rounded-pill" id="confirm-join-btn" type="submit">
-                        Create
-                    </button>
-                    <a class="btn btn-outline-light rounded-pill ms-2"
+                    <a class="btn btn-outline-light rounded-pill"
                        href="{% url 'events:event-detail' order.event.organisation.path order.event.slug %}">
                         Cancel
                     </a>
+                    <button class="btn btn-light rounded-pill ms-2" id="confirm-join-btn" type="submit">
+                        Create
+                    </button>
                 </div>
             </form>
         {% else %}

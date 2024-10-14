@@ -9,13 +9,13 @@
             <p><strong>This can't be undone</strong></p>
             {{ form }}
             <div class="text-end mt-4">
-                <button class="btn btn-outline-light rounded-pill" id="update-event-btn" type="submit">
-                    Confirm
-                </button>
-                <a class="btn btn-outline-light rounded-pill ms-2"
+                <a class="btn btn-outline-light rounded-pill"
                    href="{% url 'events:event-detail' object.organisation.path object.slug %}">
                     Cancel
                 </a>
+                <button class="btn btn-light rounded-pill ms-2" id="update-event-btn" type="submit">
+                    Confirm
+                </button>
             </div>
         </form>
     </div>
