@@ -17,13 +17,13 @@
                         </a>
                     </div>
                     <div class="col-7 text-end">
-                        <button class="btn btn-outline-light rounded-pill" id="update-event-btn" type="submit">
-                            Update
-                        </button>
-                        <a class="btn btn-outline-light rounded-pill ms-2"
+                        <a class="btn btn-outline-light rounded-pill"
                            href="{% url 'events:event-detail' event.organisation.path event.slug %}">
                             Cancel
                         </a>
+                        <button class="btn btn-light rounded-pill ms-2" id="update-event-btn" type="submit">
+                            Update
+                        </button>
                     </div>
                 </div>
             </form>
