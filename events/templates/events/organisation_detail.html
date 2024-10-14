@@ -1,4 +1,4 @@
-<!--# events/templates/events/index.html-->
+<!--# events/templates/events/organisation_detail.html-->
 {% extends "./main_template.html" %}
 
 {% block content %}
@@ -8,8 +8,8 @@
                  style="max-height: 140px; max-width: 140px;"/>
         </div>
         <div class="row text-center text-light ">
-            <h2 class="display-5">{{ organisation.name }}</h2>
-            <h4 class="lead my-auto">{{ organisation.description }}</h4>
+            <h2 class="display-5">{{ object.name }}</h2>
+            <h4 class="lead my-auto">{{ object.description }}</h4>
         </div>
     </div>
 
@@ -20,11 +20,11 @@
             <h4 class="text-light text-center">Admin Actions:</h4>
             <div class="text-center">
                 <a class="btn btn-outline-light rounded-pill "
-                   href="{% url 'events:org-edit' organisation.path %}">
-                    Edit Organisation
+                   href="{% url 'events:org-update' organisation.path %}">
+                    Update Organisation
                 </a>
                 <a class="btn btn-outline-light rounded-pill ms-2"
-                   href="{% url 'events:event-create' organisation.path %}">
+                   href="{% url 'events:event-create' object.path %}">
                     Create Event
                 </a>
             </div>

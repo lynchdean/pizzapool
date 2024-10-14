@@ -2,22 +2,22 @@
 {% extends "events/main_template.html" %}
 
 {% block content %}
-<div class="container text-light">
-    <h4 class="display-6">{{ org.name }} - Edit Details:</h4>
-    {% load crispy_forms_tags %}
-    <form action="" enctype="multipart/form-data" method="post">
-        {% csrf_token %}
-        {{ formset|crispy }}
-        <div class="text-end mt-4">
-            <a class="btn btn-outline-light rounded-pill" href="{% url 'events:org-detail' org.path %}">
-                Cancel
-            </a>
-            <button class="btn btn-outline-light rounded-pill ms-2" id="confirm-order-btn" type="submit">
-                Update
-            </button>
-        </div>
-    </form>
-</div>
+    <div class="container text-light">
+        <h4 class="display-6">{{ object.name }} - Update Details:</h4>
+        {% load crispy_forms_tags %}
+        <form action="" enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class="text-end mt-4">
+                <a class="btn btn-outline-light rounded-pill" href="{% url 'events:org-detail' object.path %}">
+                    Cancel
+                </a>
+                <button class="btn btn-outline-light rounded-pill ms-2" id="confirm-order-btn" type="submit">
+                    Update
+                </button>
+            </div>
+        </form>
+    </div>
 {% endblock %}
 
 

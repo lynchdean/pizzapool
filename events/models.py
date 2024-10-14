@@ -116,15 +116,6 @@ class PizzaOrder(models.Model):
         if self.event_is_locked():
             raise ValidationError("Event is locked", code="locked")
 
-    def clean(self):
-        super().clean()
-        if self.event and self.available_slices:
-            if self.available_slices >= self.event.servings_per_order:
-                raise ValidationError({
-                    'available_slices': f"Available slices cannot be greater than or equal to "
-                                        f"{self.event.servings_per_order}."
-                })
-
     def save(self, *args, **kwargs):
         self._validate_available_slices_maximum()
         self._validate_event_is_unlocked()
