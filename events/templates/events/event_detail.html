@@ -154,7 +154,7 @@
                     Locked</a>
             {% else %}
                 <a class="btn btn-outline-light rounded-pill text-center"
-                   href="{% url 'events:create-pizza-order' event.organisation.path event.slug %}?next={{ request.path|urlencode }}"
+                   href="{% url 'events:create-pizza-order' event.organisation.path event.slug %}"
                    id="create-order-btn"
                    role="button">Start a new pizza order</a>
             {% endif %}

@@ -1,6 +1,8 @@
+import time
 from decimal import Decimal
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.test import override_settings
 from selenium.webdriver import ActionChains
 
 from selenium import webdriver
@@ -19,7 +21,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
         options.add_argument("--headless")
         cls.selenium = webdriver.Chrome(options=options)
         cls.selenium.maximize_window()
-        cls.selenium.implicitly_wait(10)
+        # cls.selenium.implicitly_wait(10)
 
     @classmethod
     def tearDownClass(cls):
@@ -43,6 +45,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
         self.selenium.get(f"{self.live_server_url}/{self.org_path}/")
         self.assertEqual(self.selenium.current_url, f'{self.live_server_url}/test-org/')
 
+    @override_settings(DEBUG=True)
     def test_order_creation(self):
         # Event page
         self.selenium.get(f'{self.live_server_url}/{self.org_path}/{self.event.slug}/')
@@ -64,9 +67,9 @@ class MySeleniumTests(StaticLiveServerTestCase):
         slices.clear()
         slices.send_keys("7")
         confirm_btn = self.selenium.find_element(By.ID, "confirm-order-btn")
-        ActionChains(self.selenium).move_to_element(confirm_btn).perform()
+        # ActionChains(self.selenium).move_to_element(confirm_btn).perform()
         confirm_btn.click()
-
+        time.sleep(2)
         # Check returned to Event page
         url = self.selenium.current_url
         self.assertEqual(url, f'{self.live_server_url}/{self.org_path}/{self.event.slug}/')
@@ -114,7 +117,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
 
     def test_remove_from_order(self):
         order = create_order(event=self.event)
-        slices = create_slices(pizza_order=order)
+        create_slices(pizza_order=order)
 
         # Check slices exist
         self.assertTrue(PizzaSlices.objects.filter(pizza_order=order).count() == 1)
@@ -129,7 +132,7 @@ class MySeleniumTests(StaticLiveServerTestCase):
         remove_slices.click()
 
         # Check returned to Event page
-        self.selenium.implicitly_wait(2)
+        time.sleep(0.2)
         url = self.selenium.current_url
         self.assertEqual(url, f'{self.live_server_url}/{self.org_path}/{self.event.slug}/')
 

@@ -6,7 +6,7 @@ from events.models import Organisation, PizzaOrder, PizzaSlices, Event
 from .widgets import DateTimeInput
 
 
-class OrgEditForm(forms.ModelForm):
+class OrgUpdateForm(forms.ModelForm):
     logo = ImageField(widget=FileInput)
 
     class Meta:
@@ -32,27 +32,42 @@ class EventCreateForm(forms.ModelForm):
 class EventEditForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = '__all__'
-        exclude = ['organisation', 'servings_per_order']
+        fields = ['name', 'date', 'description', 'private', 'locked']
 
 
-class PizzaOrderForm(forms.ModelForm):
+class OrderCreateForm(forms.ModelForm):
     class Meta:
         model = PizzaOrder
-        fields = '__all__'
-        widgets = {'event': forms.HiddenInput()}
+        fields = ['purchaser_name', 'purchaser_whatsapp', 'purchaser_revolut', 'pizza_type', 'price_per_slice',
+                  'available_slices']
         error_messages = {
             'purchaser_whatsapp': {
                 'invalid': "Enter a valid phone number (e.g. 087 123 4567) or a number with an international call prefix.",
             },
         }
 
+    def __init__(self, *args, **kwargs):
+        super(OrderCreateForm, self).__init__(*args, **kwargs)
+        self.event = self.initial.get('event')
+        if self.event:
+            self.fields['available_slices'].widget.attrs.update(
+                {'min': 1, 'max': self.event.servings_per_order - 1},
+            )
+        self.fields['price_per_slice'].widget.attrs.update(
+            {'min': 0.01},
+        )
 
-class PizzaSlicesForm(forms.ModelForm):
+    def clean_available_slices(self):
+        available_slices = self.cleaned_data.get('available_slices')
+        if self.event and available_slices > self.event.servings_per_order:
+            raise forms.ValidationError("Available slices cannot be greater than the total servings in the order.")
+        return available_slices
+
+
+class ServingCreateForm(forms.ModelForm):
     class Meta:
         model = PizzaSlices
-        fields = "__all__"
-        widgets = {'pizza_order': forms.HiddenInput()}
+        fields = "buyer_name", "buyer_whatsapp", "number_of_slices"
         error_messages = {
             'buyer_whatsapp': {
                 'invalid': "Enter a valid phone number (e.g. 087 123 4567) or a number with an international call prefix.",
@@ -60,7 +75,7 @@ class PizzaSlicesForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        super(PizzaSlicesForm, self).__init__(*args, **kwargs)
+        super(ServingCreateForm, self).__init__(*args, **kwargs)
         initial = kwargs.get('initial')
         if initial:
             remaining = initial['pizza_order'].get_total_remaining()
