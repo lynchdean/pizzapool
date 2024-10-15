@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.forms import forms
 
-from .models import Organisation, OrgUser, Event, PizzaOrder, PizzaSlices
+from .models import Organisation, OrgUser, Event, Order, Serving
 
 
 class CustomUserChangeForm(UserChangeForm):
@@ -61,5 +61,5 @@ class CustomUserAdmin(UserAdmin):
 admin.site.register(Organisation, readonly_fields=['path'])
 admin.site.register(OrgUser, CustomUserAdmin)
 admin.site.register(Event)
-admin.site.register(PizzaOrder)
-admin.site.register(PizzaSlices)
+admin.site.register(Order)
+admin.site.register(Serving)

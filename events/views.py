@@ -5,7 +5,7 @@ from django.views import generic
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import DeleteView, TemplateView
 
-from .models import OrgUser, Organisation, Event, PizzaOrder, PizzaSlices
+from .models import OrgUser, Organisation, Event, Order, Serving
 from .forms import OrderCreateForm, ServingCreateForm, OrgUpdateForm, EventEditForm, EventCreateForm
 
 
@@ -84,8 +84,8 @@ class EventDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        pizza_orders = PizzaOrder.objects.filter(event=self.object)
-        context['pizza_orders'] = pizza_orders
+        orders = Order.objects.filter(event=self.object)
+        context['orders'] = orders
         return context
 
 
@@ -125,7 +125,7 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 
 class OrderCreateView(generic.CreateView):
-    model = PizzaOrder
+    model = Order
     form_class = OrderCreateForm
     template_name = "events/order_create.html"
     event = None
@@ -154,7 +154,7 @@ class OrderCreateView(generic.CreateView):
 
 
 class OrderDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = PizzaOrder
+    model = Order
     template_name = "events/order_delete.html"
 
     def test_func(self):
@@ -172,36 +172,38 @@ class OrderDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 
 class ServingCreateView(generic.CreateView):
-    model = PizzaSlices
+    model = Serving
     form_class = ServingCreateForm
     template_name = "events/serving_create.html"
+    order = None
+
+    def dispatch(self, *args, **kwargs):
+        self.order = get_object_or_404(Order, pk=self.kwargs.get('pk'))
+        return super().dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        pizza_order = get_object_or_404(PizzaOrder, pk=self.kwargs.get('pk'))
-        context['order'] = pizza_order
+        context['order'] = self.order
         return context
 
     def form_valid(self, form):
-        pizza_order = get_object_or_404(PizzaOrder, pk=self.kwargs.get('pk'))
-        form.instance.pizza_order = pizza_order
+        form.instance.order = self.order
         return super().form_valid(form)
 
     def get_success_url(self):
-        pizza_order = get_object_or_404(PizzaOrder, pk=self.kwargs.get('pk'))
         return reverse_lazy("events:event-detail", kwargs={
-            "path": pizza_order.event.organisation.path,
-            "slug": pizza_order.event.slug
+            "path": self.order.event.organisation.path,
+            "slug": self.order.event.slug
         })
 
 
-class PizzaSlicesDeleteView(DeleteView):
-    model = PizzaSlices
+class ServingDeleteView(DeleteView):
+    model = Serving
     template_name = "events/delete_slices.html"
 
     def get_success_url(self):
-        slices = self.get_object()
+        servings = self.get_object()
         return reverse_lazy("events:event-detail", kwargs={
-            "path": slices.pizza_order.event.organisation.path,
-            "slug": slices.pizza_order.event.slug
+            "path": servings.order.event.organisation.path,
+            "slug": servings.order.event.slug
         })

@@ -3,7 +3,7 @@
 
 {% block content %}
     <div class="container text-light p-3">
-        {% if not object.pizza_order.event_is_locked %}
+        {% if not object.order.event_is_locked %}
             <div class="alert" role="alert">
                 <form method="post">{% csrf_token %}
                     <p>
@@ -20,7 +20,7 @@
                     <input name="next" type="hidden" value="{{ request.GET.next }}">
                     <div class="text-end mt-4">
                         <a class="btn btn-outline-light rounded-pill"
-                           href="{% url 'events:event-detail' object.pizza_order.event.organisation.path object.pizza_order.event.slug %}">
+                           href="{% url 'events:event-detail' object.order.event.organisation.path object.order.event.slug %}">
                             Cancel
                         </a>
                         <button class="btn btn-light rounded-pill ms-2" id="confirm-remove-slices-btn" type="submit">

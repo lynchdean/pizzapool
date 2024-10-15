@@ -75,41 +75,42 @@ class Event(models.Model):
         return self.filter(organisation=organisation, date__lt=timezone.now())
 
 
-class PizzaOrder(models.Model):
+class Order(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     purchaser_name = models.CharField("Name", max_length=50)
     purchaser_whatsapp = PhoneNumberField("WhatsApp", null=False, blank=False)
     purchaser_revolut = models.CharField("Revolut username", max_length=16, validators=[alphanumeric])
-    pizza_type = models.CharField(max_length=100)
-    price_per_slice = models.DecimalField("Price per slice", max_digits=4, decimal_places=2)
-    available_slices = models.PositiveIntegerField(default=1, validators=[MinValueValidator(1)])
+    description = models.CharField("Food description (e.g. Pizza type)", max_length=100)
+    price_per_serving = models.DecimalField(max_digits=4, decimal_places=2)
+    available_servings = models.PositiveIntegerField("Servings available to be claimed by other users",
+                                                     default=1, validators=[MinValueValidator(1)])
 
     def __str__(self) -> str:
-        return f"{self.purchaser_name} - {self.pizza_type}"
+        return f"{self.purchaser_name} - {self.description}"
 
-    def matched_slices(self):
-        """Returns PizzaSlices linked with this order, returns empty queryset if no slices are linked"""
-        return PizzaSlices.objects.filter(pizza_order=self.id)
+    def matched_servings(self):
+        """Returns Servings linked with this order, returns empty queryset if no slices are linked"""
+        return Serving.objects.filter(order=self.id)
 
     def get_total_claimed(self) -> int:
         """Returns the number of slices linked with this order"""
-        matched_slices = self.matched_slices()
-        if matched_slices:
-            return matched_slices.aggregate(Sum('number_of_slices'))['number_of_slices__sum']
+        matched_servings = self.matched_servings()
+        if matched_servings:
+            return matched_servings.aggregate(Sum('number_of_servings'))['number_of_servings__sum']
         else:
             return 0
 
     def get_total_remaining(self):
-        """Returns the number of slices that have not been claimed from the order"""
-        return self.available_slices - self.get_total_claimed()
+        """Returns the number of servings that have not been claimed from the order"""
+        return self.available_servings - self.get_total_claimed()
 
     def event_is_locked(self):
         return self.event.locked
 
-    def _validate_available_slices_maximum(self):
-        if self.available_slices >= self.event.servings_per_order:
+    def _validate_available_servings_maximum(self):
+        if self.available_servings >= self.event.servings_per_order:
             raise ValidationError(
-                "Available slices cannot be greater than or equal to the total servings in the order.",
+                "Available servings cannot be greater than or equal to the total servings in the order.",
                 code="servings gte total servings")
 
     def _validate_event_is_unlocked(self):
@@ -117,26 +118,25 @@ class PizzaOrder(models.Model):
             raise ValidationError("Event is locked", code="locked")
 
     def save(self, *args, **kwargs):
-        self._validate_available_slices_maximum()
+        self._validate_available_servings_maximum()
         self._validate_event_is_unlocked()
-        super(PizzaOrder, self).save(*args, **kwargs)
+        super(Order, self).save(*args, **kwargs)
 
 
-class PizzaSlices(models.Model):
-    pizza_order = models.ForeignKey(PizzaOrder, on_delete=models.CASCADE)
+class Serving(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
     buyer_name = models.CharField("Name", max_length=50)
     buyer_whatsapp = PhoneNumberField("WhatsApp", null=False, blank=False)
-    number_of_slices = models.PositiveIntegerField(default=1, validators=[
-        MinValueValidator(1),
-        MaxValueValidator(8)])
+    number_of_servings = models.PositiveIntegerField(default=1, validators=[
+        MinValueValidator(1)])
 
     def __str__(self) -> str:
         return f"{self.buyer_name}"
 
     def save(self, *args, **kwargs):
         if self.id is None:
-            if self.pizza_order.event_is_locked():
+            if self.order.event_is_locked():
                 raise ValidationError("Event is locked", code="locked")
-            if self.number_of_slices > self.pizza_order.get_total_remaining():
-                raise ValidationError("Insufficient remaining slices", code="insufficient_slices")
-        super(PizzaSlices, self).save(*args, **kwargs)
+            if self.number_of_servings > self.order.get_total_remaining():
+                raise ValidationError("Insufficient remaining servings", code="insufficient_servings")
+        super(Serving, self).save(*args, **kwargs)
