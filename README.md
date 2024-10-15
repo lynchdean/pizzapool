@@ -1,7 +1,10 @@
-# 🍕 Pizzapool 
+# 🍕 pizzapool 
 
-### Please note: pizzapool will be undergoing server migration to an EU hosted server within the next day or two, and may be temporarily unavailable at pizzapool.pythonanywere.com
-### pizzapool.app will be the new home of the site once this migration has been completed!
+#### Latest updates:
+- pizzapool now has a new home over at [pizzapool.app](https://pizzapool.app)!
+- *More than just slices.* I've made the language used more generic meaning pizzapool can be used for other types of group orders. 
+- New updates are on the way soon to give organisers the tools they need to administrate their events.
+- Payment processing is planned to be the next big feature update once the admin tools have been rolled out.
 
 ## A carpool-style pizza ordering web app.
 
@@ -14,4 +17,6 @@ This app was designed so that people could organise and pre-order a full pizza t
  - 10 full orders made. 80 slices deleivered, 58 of those distributed to different people with the help of the app.
  - A noticibly shorter queue in the restaurant, meaning those who weren't fortunate enough to use the app to claim a slice also benefitted by having to wait less time to make an order.
 
-**Pizzapool has been used ever since for each of the Mild Activity Wednesday Social events! Some stats will be shared once the Wednesday Socials finsh up for the year.**
+**Pizzapool has been used ever since for each of the Mild Activity Wednesday Social events!**
+
+If you are interested in using pizzapool for your group or organisation please get in touch at [please get in touch.](mailto:deanl-dev@outlook.com?subject=pizzapool%20enquiry)
