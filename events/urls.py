@@ -18,6 +18,6 @@ urlpatterns = [
     path("<slug:path>/<slug>/delete/", views.EventDeleteView.as_view(), name="event-delete"),
     path("<slug:path>/<slug>/create-order/", views.OrderCreateView.as_view(), name='create-pizza-order'),
     path("<slug:path>/<slug>/<int:pk>/delete-order/", views.OrderDeleteView.as_view(), name='order-delete'),
-    path("<slug:path>/<int:pk>/claim/", views.ServingCreateView.as_view(), name='claim-slices'),
-    path("<slug:path>/<int:pk>/delete-slices/", views.PizzaSlicesDeleteView.as_view(), name='delete-slices'),
+    path("<slug:path>/<int:pk>/claim/", views.ServingCreateView.as_view(), name='claim-servings'),
+    path("<slug:path>/<int:pk>/delete-servings/", views.ServingDeleteView.as_view(), name='delete-servings'),
 ]

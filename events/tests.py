@@ -1,10 +1,10 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
-from .testing_utils import create_event, create_order, create_slices, create_organisation
+from .testing_utils import create_event, create_order, create_serving, create_organisation
 
 
-class PizzaOrderModelTests(TestCase):
+class OrderModelTests(TestCase):
     def setUp(self):
         self.org = create_organisation()
         self.event = create_event(self.org)
@@ -15,95 +15,95 @@ class PizzaOrderModelTests(TestCase):
         self.event.delete()
         self.order.delete()
 
-    def test_matched_slices_returns_empty_queryset_if_no_matches(self):
+    def test_matched_servings_returns_empty_queryset_if_no_matches(self):
         """
-        matched_slices() returns empty queryset if there are no slices linked to the order.
+        matched_servings() returns empty queryset if there are no servings linked to the order.
         :return:
         """
-        self.assertFalse(self.order.matched_slices().exists())
+        self.assertFalse(self.order.matched_servings().exists())
 
-    def test_matched_slices_returns_results(self):
+    def test_matched_servings_returns_results(self):
         """
-        matched_slices() returns queryset if there are slices linked to the order.
+        matched_servings() returns queryset if there are servings linked to the order.
         :return:
         """
-        create_slices(pizza_order=self.order)
-        self.assertTrue(self.order.matched_slices().exists())
+        create_serving(order=self.order)
+        self.assertTrue(self.order.matched_servings().exists())
 
-    def test_matched_slices_returns_correct_amount(self):
+    def test_matched_servings_returns_correct_amount(self):
         """
-        matched_slices() returns the correct number of PizzaSlices objects.
+        matched_servings() returns the correct number of Serving objects.
         :return:
         """
         for _ in range(3):
-            create_slices(pizza_order=self.order)
-        self.assertTrue(self.order.matched_slices().count() == 3)
+            create_serving(order=self.order)
+        self.assertTrue(self.order.matched_servings().count() == 3)
 
-    def test_matched_slices_returns_correct_amount_if_slices_deleted(self):
+    def test_matched_servings_returns_correct_amount_if_slices_deleted(self):
         """
-        matched_slices() returns the correct number of PizzaSlices objects after some slices have been deleted.
+        matched_servings() returns the correct number of Serving objects after some servings have been deleted.
         :return:
         """
-        create_slices(pizza_order=self.order, number_of_slices=3)
-        slices = create_slices(pizza_order=self.order, number_of_slices=2)
-        self.assertTrue(self.order.matched_slices().count() == 2)
-        slices.delete()
-        self.assertTrue(self.order.matched_slices().count() == 1)
+        create_serving(order=self.order, number_of_servings=3)
+        servings = create_serving(order=self.order, number_of_servings=2)
+        self.assertTrue(self.order.matched_servings().count() == 2)
+        servings.delete()
+        self.assertTrue(self.order.matched_servings().count() == 1)
 
-    def test_get_total_claimed_returns_zero_if_no_slices(self):
+    def test_get_total_claimed_returns_zero_if_no_servings(self):
         """
-        get_total_claimed() returns 0 if there are no PizzaSlices linked to the order.
+        get_total_claimed() returns 0 if there are no Serving linked to the order.
         :return:
         """
         self.assertTrue(self.order.get_total_claimed() == 0)
 
     def test_get_total_claimed_returns_correct_total(self):
         """
-        get_total_claimed() returns the correct number of total slices
+        get_total_claimed() returns the correct number of total servings
         :return:
         """
-        create_slices(pizza_order=self.order, number_of_slices=1)
-        create_slices(pizza_order=self.order, number_of_slices=2)
+        create_serving(order=self.order, number_of_servings=1)
+        create_serving(order=self.order, number_of_servings=2)
         self.assertTrue(self.order.get_total_claimed() == 3)
 
-    def test_get_total_claimed_returns_correct_total_if_slices_deleted(self):
+    def test_get_total_claimed_returns_correct_total_if_servings_deleted(self):
         """
-        get_total_claimed() returns the correct number of total slices after some slices have been deleted,
+        get_total_claimed() returns the correct number of total servings after some servings have been deleted,
         :return:
         """
-        create_slices(pizza_order=self.order, number_of_slices=1)
-        slices = create_slices(pizza_order=self.order, number_of_slices=2)
+        create_serving(order=self.order, number_of_servings=1)
+        servings = create_serving(order=self.order, number_of_servings=2)
         self.assertTrue(self.order.get_total_claimed() == 3)
-        slices.delete()
+        servings.delete()
         self.assertTrue(self.order.get_total_claimed() == 1)
 
-    def test_get_total_claimed_returns_correct_total_if_slices_edited(self):
+    def test_get_total_claimed_returns_correct_total_if_servings_edited(self):
         """
-        get_total_claimed() returns the correct number of total slices after some slices have been edited.
+        get_total_claimed() returns the correct number of total servings after some servings have been edited.
         :return:
         """
-        create_slices(pizza_order=self.order, number_of_slices=1)
-        slices = create_slices(pizza_order=self.order, number_of_slices=2)
+        create_serving(order=self.order, number_of_servings=1)
+        servings = create_serving(order=self.order, number_of_servings=2)
         self.assertTrue(self.order.get_total_claimed() == 3)
-        slices.number_of_slices = 1
-        slices.save()
+        servings.number_of_servings = 1
+        servings.save()
         self.assertTrue(self.order.get_total_claimed() == 2)
 
     def test_get_total_remaining_returns_correct_total_if_none_claimed(self):
         """
-        get_total_remaining() matches available_slices if no slices are linked.
+        get_total_remaining() matches available_servings if no servings are linked.
         :return:
         """
-        self.assertEqual(self.order.get_total_remaining(), self.order.available_slices)
+        self.assertEqual(self.order.get_total_remaining(), self.order.available_servings)
 
     def test_get_total_remaining_returns_correct_total(self):
         """
-        get_total_remaining() returns correct total if some slices are linked.
+        get_total_remaining() returns correct total if some servings are linked.
         :return:
         """
-        create_slices(pizza_order=self.order, number_of_slices=3)
+        create_serving(order=self.order, number_of_servings=3)
         self.assertTrue(self.order.get_total_remaining() == 4)
-        create_slices(pizza_order=self.order, number_of_slices=4)
+        create_serving(order=self.order, number_of_servings=4)
         self.assertTrue(self.order.get_total_remaining() == 0)
 
     def test_event_is_locked(self):
@@ -126,7 +126,7 @@ class PizzaOrderModelTests(TestCase):
             self.order.save()
 
 
-class PizzaSlicesModelTests(TestCase):
+class ServingModelTests(TestCase):
     def setUp(self):
         self.org = create_organisation()
         self.event = create_event(self.org)
@@ -137,31 +137,31 @@ class PizzaSlicesModelTests(TestCase):
         self.event.delete()
         self.order.delete()
 
-    def test_create_slices_fails_if_event_locked(self):
+    def test_create_servings_fails_if_event_locked(self):
         """
         save() throws Validation error if event is locked.
         :return:
         """
         self.event.locked = True
         with self.assertRaisesRegex(ValidationError, "locked"):
-            create_slices(pizza_order=self.order)
+            create_serving(order=self.order)
 
-    def test_create_slices_fails_if_order_is_full(self):
+    def test_create_servings_fails_if_order_is_full(self):
         """
         save() throws Validation error if order is full.
         :return:
         """
         available = self.order.get_total_remaining()
-        create_slices(pizza_order=self.order, number_of_slices=available)
+        create_serving(order=self.order, number_of_servings=available)
         with self.assertRaisesRegex(ValidationError, "Insufficient"):
-            create_slices(pizza_order=self.order, number_of_slices=1)
+            create_serving(order=self.order, number_of_servings=1)
 
-    def test_create_slices_fails_if_order_doesnt_have_enough_slices(self):
+    def test_create_servings_fails_if_order_doesnt_have_enough_servings(self):
         """
-        save() throws Validation error if order doesn't have a sufficient number of slices remaining.
+        save() throws Validation error if order doesn't have a sufficient number of servings remaining.
         :return:
         """
         available = self.order.get_total_remaining()
-        create_slices(pizza_order=self.order, number_of_slices=available - 1)
+        create_serving(order=self.order, number_of_servings=available - 1)
         with self.assertRaisesRegex(ValidationError, "Insufficient"):
-            create_slices(pizza_order=self.order, number_of_slices=2)
+            create_serving(order=self.order, number_of_servings=2)
