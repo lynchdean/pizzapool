@@ -1,7 +1,26 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
+from django.core import mail
 
 from .testing_utils import create_event, create_order, create_serving, create_organisation
+
+
+class EmailTests(TestCase):
+    # Send message
+    def test_send_mail(self):
+        from django.core.mail import send_mail
+        send_mail(
+            'Subject here',
+            'Here is the message.',
+            'noreply@pizzapool.app',
+            ['deanl-dev@outlook.com'],
+            fail_silently=False,
+        )
+        #  Test that one message has been sent.
+        self.assertEqual(len(mail.outbox), 1)
+
+        # Verify that the subject of the first message is correct.
+        self.assertEqual(mail.outbox[0].subject, 'Subject here')
 
 
 class OrderModelTests(TestCase):

@@ -1,4 +1,4 @@
-from django.contrib.auth.views import LoginView, LogoutView
+import django.contrib.auth.views as auth_views
 from django.urls import path
 
 from pizzapool import settings
@@ -6,9 +6,12 @@ from . import views
 
 app_name = "events"
 urlpatterns = [
+    # Index
     path('', views.HomePage.as_view(), name='home'),
-    path('login/', LoginView.as_view(), name='login'),
-    path('logout/', LogoutView.as_view(next_page=settings.LOGOUT_REDIRECT_URL), name='logout'),
+    # Auth
+    path('login/', auth_views.LoginView.as_view(), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(next_page=settings.LOGOUT_REDIRECT_URL), name='logout'),
+    # Events
     path('user/<str:username>', views.UserView.as_view(), name='user'),
     path("<slug:path>/", views.OrgDetailView.as_view(), name="org-detail"),
     path("<slug:path>/edit/", views.OrgUpdateView.as_view(), name="org-update"),
