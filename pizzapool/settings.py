@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
 import environ
+import certifi
+import ssl
 from pathlib import Path
 from email.utils import parseaddr
 
@@ -38,6 +40,7 @@ LOGIN_URL = '/login'
 # Application definition
 
 INSTALLED_APPS = [
+    'events.apps.EventsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -49,7 +52,6 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     "phonenumber_field",
     'django_cleanup.apps.CleanupConfig',
-    'events.apps.EventsConfig',
 ]
 
 MIDDLEWARE = [
@@ -109,6 +111,19 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# Ensure SSL context uses certifi's CA bundle
+ssl_context = ssl.create_default_context(cafile=certifi.where())
+
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = env.int('EMAIL_PORT')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
