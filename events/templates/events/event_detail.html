@@ -1,5 +1,5 @@
 <!--# events/templates/events/event_detail.html-->
-{% extends "./main_template.html" %}
+{% extends "events/main_template.html" %}
 {% load static %}
 
 {% block content %}
@@ -40,7 +40,7 @@
     </div>
 
     <div class="container text-light mb-3">
-        <h3 class="py-3">Pizza Orders:</h3>
+        <h3 class="py-3">Orders:</h3>
         {% if orders %}
             {% for order in orders %}
                 <div class="card w-100 mb-3">
