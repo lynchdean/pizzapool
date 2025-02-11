@@ -54,7 +54,7 @@ jobs:
             # Stop running container
             docker stop $(echo $IMAGE_NAME)
             # Remove old container
-            docker rm ${echo $REGISTRY}/$(echo $IMAGE_NAME)
+            docker rm $(echo $IMAGE_NAME)
             # Run a new container from a new image
             docker run -d \
             --restart always \
