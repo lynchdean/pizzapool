@@ -48,7 +48,6 @@ jobs:
           username: ${{ secrets.DIGITALOCEAN_USERNAME }}
           password: ${{ secrets.DIGITALOCEAN_PASSWORD }}
           key: ${{ secrets.DIGITALOCEAN_SSHKEY }}
-          passphrase: ${{ secrets.DIGITALOCEAN_PASSPHRASE }}
           envs: IMAGE_NAME,REGISTRY,{{ secrets.DIGITALOCEAN_ACCESS_TOKEN }},GITHUB_SHA
           script: |
             # Login to registry
