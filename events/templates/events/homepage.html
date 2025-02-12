@@ -10,40 +10,39 @@
                 <div class="row g-0">
                     <div class="col-8 text-start d-flex">
                         <div class="my-auto">
-                            <div class="display-5">testtesttest/div>
-                                <div class="display-5">carpool-style</div>
-                                <div class="display-5">group ordering</div>
-                            </div>
+                            <div class="display-5">carpool-style</div>
+                            <div class="display-5">group ordering</div>
                         </div>
-                        <div class="col-4">
-                            <img alt="logo" class="img-fluid" src="{% static 'events/img/logo3_white.png' %}">
-                        </div>
+                    </div>
+                    <div class="col-4">
+                        <img alt="logo" class="img-fluid" src="{% static 'events/img/logo3_white.png' %}">
                     </div>
                 </div>
             </div>
-
-            <p class="lead mb-2">Streamlined group orders for clubs and organisations.</p>
-            <p class="lead">Make pre-ordering hassle-free, reduce queues and spend more time enjoying your event.</p>
-
-            <div class="border-bottom border-2 my-5">
-                {#    divider    #}
-            </div>
-
-            <div class="text-center">
-                <div class="display-5 mb-4">Find out more</div>
-                <p>Interested in using pizzapool for your group or organisation? <br/>
-                    Want to know more about how it works? <br/>
-                    Get in touch <a class="text-light"
-                                    href="mailto:deanl-dev@outlook.com?subject=pizzapool%20enquiry">here</a>.
-                </p>
-
-                <a class="btn btn-outline-light rounded-pill mt-4"
-                   href="{% url 'events:org-detail' 'example' %}"
-                   id="orgs">
-                    Click here to test an example event
-                </a>
-            </div>
         </div>
+
+        <p class="lead mb-2">Streamlined group orders for clubs and organisations.</p>
+        <p class="lead">Make pre-ordering hassle-free, reduce queues and spend more time enjoying your event.</p>
+
+        <div class="border-bottom border-2 my-5">
+            {#    divider    #}
+        </div>
+
+        <div class="text-center">
+            <div class="display-5 mb-4">Find out more</div>
+            <p>Interested in using pizzapool for your group or organisation? <br/>
+                Want to know more about how it works? <br/>
+                Get in touch <a class="text-light"
+                                href="mailto:deanl-dev@outlook.com?subject=pizzapool%20enquiry">here</a>.
+            </p>
+
+            <a class="btn btn-outline-light rounded-pill mt-4"
+               href="{% url 'events:org-detail' 'example' %}"
+               id="orgs">
+                Click here to test an example event
+            </a>
+        </div>
+    </div>
 
 
 {% endblock %}
