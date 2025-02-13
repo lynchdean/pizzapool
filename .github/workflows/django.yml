@@ -11,6 +11,9 @@ env:
   SECRET_KEY: ${{ secrets.SECRET_KEY }}
   ALLOWED_HOSTS: '*'
   ADMINS: '"Dean" <lynchdean@gmail.com>'
+  DB_NAME: dbtest
+  DB_USER: postgres
+  DB_PASSWORD: postgres
   EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
   EMAIL_PORT: 587
   EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
