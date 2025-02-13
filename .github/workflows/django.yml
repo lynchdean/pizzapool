@@ -33,7 +33,7 @@ jobs:
           POSTGRES_PASSWORD: ${{ env.DB_PASSWORD }}
           POSTGRES_DB: ${{ env.DB_NAME }}
         ports:
-          - 5433:5433
+          - 5432:5432
         options: >-
           --health-cmd "pg_isready -U ${{ secrets.POSTGRES_USER }}" 
           --health-interval 10s 
