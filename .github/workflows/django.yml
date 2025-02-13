@@ -11,9 +11,6 @@ env:
   SECRET_KEY: ${{ secrets.SECRET_KEY }}
   ALLOWED_HOSTS: '*'
   ADMINS: '"Dean" <lynchdean@gmail.com>'
-  DB_NAME: ${{ secrets.DB_NAME }}
-  DB_USER: ${{ secrets.DB_USER }}
-  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
   EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
   EMAIL_PORT: 587
   EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
@@ -27,21 +24,15 @@ jobs:
 
     services:
       postgres:
-        image: postgres:17
+        image: postgres:latest
         env:
-          POSTGRES_USER: ${{ env.DB_USER }}
-          POSTGRES_PASSWORD: ${{ env.DB_PASSWORD }}
-          POSTGRES_DB: ${{ env.DB_NAME }}
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: dbtest
         ports:
           - 5432:5432
-        options: >-
-          --health-cmd "pg_isready" 
-          --health-interval 10s 
-          --health-timeout 5s 
-          --health-retries 5
-
-    env:
-      DATABASE_URL: postgres://${{ env.DB_USER }}:${{ env.DB_PASSWORD }}@localhost:5432/${{ env.DB_NAME }}
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
       - name: Checkout code
