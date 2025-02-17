@@ -2,8 +2,7 @@ services:
   django-web:
     build: .
     container_name: pizzapool-docker
-    #    network_mode: "host"
-    ports:
+    expose:
       - "8000:8000"
     environment:
       SECRET_KEY: ${SECRET_KEY}
@@ -15,5 +14,29 @@ services:
       DATABASE_PASSWORD: ${DB_PASSWORD}
       DATABASE_HOST: ${DB_HOST}
       DATABASE_PORT: ${DB_PORT}
+    volumes:
+      - ./static:/app/static
+      - ./media:/app/media
     env_file:
       - .env
+    networks:
+      - my_network  # Shared custom network
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "8000:80"  # Map port 80 to 8000 on the host
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./static:/static  # Serve static files
+      - ./media:/media  # Serve media files
+    depends_on:
+      - django-web
+    restart: always
+    networks:
+      - my_network  # Shared custom network
+
+networks:
+  my_network:
+    driver: bridge
