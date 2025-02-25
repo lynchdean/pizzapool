@@ -23,10 +23,13 @@
                    href="{% url 'events:org-update' organisation.path %}">
                     Update Organisation
                 </a>
-                <a class="btn btn-outline-light rounded-pill ms-2"
-                   href="{% url 'events:event-create' object.path %}">
-                    Create Event
-                </a>
+                {% if organisation.stripe_account_verified %}
+                    <a class="btn btn-outline-light rounded-pill ms-2"
+                       href="{% url 'events:event-create' object.path %}">
+                        Create Event
+                    </a>
+                {% endif %}
+
             </div>
         </div>
     {% endif %}

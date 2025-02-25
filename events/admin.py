@@ -2,8 +2,12 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.forms import forms
+from django.conf import settings
+import stripe
 
 from .models import Organisation, OrgUser, Event, Order, Serving
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 class CustomUserChangeForm(UserChangeForm):
@@ -58,7 +62,16 @@ class CustomUserAdmin(UserAdmin):
     ordering = ("username",)
 
 
-admin.site.register(Organisation, readonly_fields=['path'])
+class OrganisationAdmin(admin.ModelAdmin):
+    readonly_fields = ['path', 'stripe_account_id', 'stripe_account_verified']
+
+    def save_model(self, request, obj, form, change):
+        response = stripe.Account.create()
+        obj.stripe_account_id = response['id']
+        super().save_model(request, obj, form, change)
+
+
+admin.site.register(Organisation, OrganisationAdmin)
 admin.site.register(OrgUser, CustomUserAdmin)
 admin.site.register(Event)
 admin.site.register(Order)

@@ -37,25 +37,59 @@
         </div>
         {% if user.organisation %}
             <div class="row">
-                <div class="col">
-                    <p><strong>Name:</strong> {{ user.organisation.name }}</p>
-                    <p><strong>Path:</strong>
-                        <a class="text-light" href="{% url 'events:org-detail' user.organisation.path %}">
-                            {{ request.get_host }}/{{ user.organisation.path }}/
-                        </a>
-                    </p>
-                    <p><strong>Description:</strong> {{ user.organisation.description }}</p>
+            {% if not user.organisation.stripe_account_id %}
+                <div class="alert alert-warning" role="alert">
+                    <span>Warning! Your organisation will be limited until linked with a valid Stripe Account ID</span>
                 </div>
-                <div class="col text-end">
-                    <img alt="Organisation logo" src="{{ user.organisation.logo.url }}"
-                         style="max-height: 100px; max-width: 100px;"/>
-                </div>
+            {% endif %}
+            <div class="col">
+
+                <p><strong>Name:</strong> {{ user.organisation.name }}</p>
+                <p><strong>Path:</strong>
+                    <a class="text-light" href="{% url 'events:org-detail' user.organisation.path %}">
+                        {{ request.get_host }}/{{ user.organisation.path }}/
+                    </a>
+                </p>
+                <p><strong>Description:</strong> {{ user.organisation.description }}</p>
+
+                <p><strong>Stripe Account ID:</strong>
+                    {% if user.organisation.stripe_account_id %}
+                        {{ user.organisation.stripe_account_id }}
+                    {% else %}
+                        No account ID set, please contact an administrator.
+                    {% endif %}
+                </p>
+
+                <p>
+                    <strong>Stripe Account Status:</strong>
+                    {% if user.organisation.stripe_account_verified %}
+                        Verified
+                    {% else %}
+                        Not verified
+                    {% endif %}
+                </p>
             </div>
+            <div class="col text-end">
+                <img alt="Organisation logo" src="{{ user.organisation.logo.url }}"
+                     style="max-height: 100px; max-width: 100px;"/>
+            </div>
+
+            <div class="text-center">
+            {% if user.organisation.stripe_account_id %}
+                <a class="btn btn-outline-light rounded-pill mx-auto"
+                   href="{{ stripe_link }}" target="_blank">
+                    {% if user.organisation.stripe_account_verified %}
+                        Visit Stripe account ⧉
+                    {% else %}
+                        Verify Stripe account ⧉
+                    {% endif %}
+                </a>
+            {% endif %}
         {% else %}
             <p class="lead">This user is not linked to an organisation</p>
         {% endif %}
-
-
+        </div>
+        </div>
     </div>
 
 {% endblock %}
