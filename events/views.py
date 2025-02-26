@@ -53,12 +53,6 @@ class UserView(generic.DetailView):
         return link["url"]
 
 
-class OrgCreateView(generic.CreateView):
-    model = Organisation
-    form_class = OrgCreateForm
-    template_name = "events/organisation_create.html"
-
-
 class OrgDetailView(generic.DetailView):
     model = Organisation
     template_name = "events/organisation_detail.html"
