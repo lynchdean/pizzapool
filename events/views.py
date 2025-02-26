@@ -4,9 +4,13 @@ from django.utils import timezone
 from django.views import generic
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import DeleteView, TemplateView
+from django.conf import settings
+import stripe
 
 from .models import OrgUser, Organisation, Event, Order, Serving
 from .forms import OrderCreateForm, ServingCreateForm, OrgUpdateForm, EventEditForm, EventCreateForm
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 class HomePage(TemplateView):
@@ -18,6 +22,35 @@ class UserView(generic.DetailView):
     slug_field = "username"
     slug_url_kwarg = "username"
     template_name = "events/user.html"
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        # If linked stripe verification = false, recheck account verification
+        if not self.object.organisation.stripe_account_verified:
+            #  Check if charges and payouts are enabled
+            account = stripe.Account.retrieve(self.object.organisation.stripe_account_id)
+            if account["charges_enabled"] and account["payouts_enabled"]:
+                # Update account if verified
+                self.object.organisation.stripe_account_verified = True
+                self.object.organisation.save()
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['stripe_link'] = self.get_stripe_setup_link()
+        return context
+
+    def get_stripe_setup_link(self):
+        url = "https://pizzapool.app"
+        link = stripe.AccountLink.create(
+            account=self.object.organisation.stripe_account_id,
+            refresh_url=f"{url}/user/{self.object.username}",
+            return_url=f"{url}/user/{self.object.username}",
+            type="account_onboarding",
+            collection_options={"fields": "eventually_due"},
+        )
+        return link["url"]
 
 
 class OrgDetailView(generic.DetailView):

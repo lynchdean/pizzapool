@@ -1,5 +1,3 @@
-import uuid
-
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -8,10 +6,12 @@ from django.db.models.functions import Lower
 from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 from django.template.defaultfilters import slugify
 from django.utils import timezone
+from django.conf import settings
 from django_sqids import SqidsField
 from phonenumber_field.modelfields import PhoneNumberField
-from sqids import Sqids
+import stripe
 
+stripe.api_key = settings.STRIPE_SECRET_KEY
 alphanumeric = RegexValidator(r'^[0-9a-zA-Z]*$', 'Only alphanumeric characters are allowed.')
 alphanumeric_hyphen_space = RegexValidator(
     r'^[0-9a-zA-Z\- ]*$',
@@ -23,6 +23,8 @@ class Organisation(models.Model):
     description = models.CharField(max_length=200)
     logo = models.ImageField(upload_to="logos")
     path = models.SlugField(unique=True)
+    stripe_account_id = models.CharField(max_length=255, blank=True)
+    stripe_account_verified = models.BooleanField(default=False)
 
     class Meta:
         constraints = [
