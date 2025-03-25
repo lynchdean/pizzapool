@@ -42,11 +42,10 @@ class UserView(generic.DetailView):
         return context
 
     def get_stripe_setup_link(self):
-        url = "https://pizzapool.app"
         link = stripe.AccountLink.create(
             account=self.object.organisation.stripe_account_id,
-            refresh_url=f"{url}/user/{self.object.username}",
-            return_url=f"{url}/user/{self.object.username}",
+            refresh_url=f"{self.request.get_host()}/user/{self.object.username}",
+            return_url=f"{self.request.get_host()}/user/{self.object.username}",
             type="account_onboarding",
             collection_options={"fields": "eventually_due"},
         )

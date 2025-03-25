@@ -3,18 +3,25 @@
 
 {% block content %}
     <div class="container text-light">
-        {% load crispy_forms_tags %}
-        <form method="post">{% csrf_token %}
-            {{ form|crispy }}
-            <div class="text-end mt-4">
-                <a class="btn btn-outline-light rounded-pill"
-                   href="{% url 'events:org-detail' org.path %}">
-                    Cancel
-                </a>
-                <button class="btn btn-light rounded-pill ms-2" id="create-event-btn" type="submit">
-                    Create
-                </button>
+        {% if not  organisation.stripe_account_verified %}
+            {% load crispy_forms_tags %}
+            <form method="post">{% csrf_token %}
+                {{ form|crispy }}
+                <div class="text-end mt-4">
+                    <a class="btn btn-outline-light rounded-pill"
+                       href="{% url 'events:org-detail' org.path %}">
+                        Cancel
+                    </a>
+                    <button class="btn btn-light rounded-pill ms-2" id="create-event-btn" type="submit">
+                        Create
+                    </button>
+                </div>
+            </form>
+        {% else %}
+            <div class="text-center">
+                <p>You must verify your Stripe account before creating an event.</p>
+                <a class="btn btn-outline-light rounded-pill " href="{% url 'events:org-detail' org.path %}">Back</a>
             </div>
-        </form>
+        {% endif %}
     </div>
 {% endblock %}
