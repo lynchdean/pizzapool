@@ -42,10 +42,13 @@ class UserView(generic.DetailView):
         return context
 
     def get_stripe_setup_link(self):
+        protocol = 'https' if self.request.is_secure() else 'http'
+        host = self.request.get_host()
+        base_url = f"{protocol}://{host}"
         link = stripe.AccountLink.create(
             account=self.object.organisation.stripe_account_id,
-            refresh_url=f"{self.request.get_host()}/user/{self.object.username}",
-            return_url=f"{self.request.get_host()}/user/{self.object.username}",
+            refresh_url=f"{base_url}/user/{self.object.username}",
+            return_url=f"{base_url}/user/{self.object.username}",
             type="account_onboarding",
             collection_options={"fields": "eventually_due"},
         )
@@ -212,6 +215,11 @@ class ServingCreateView(generic.CreateView):
     def dispatch(self, *args, **kwargs):
         self.order = get_object_or_404(Order, pk=self.kwargs.get('pk'))
         return super().dispatch(*args, **kwargs)
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['order'] = self.order
+        return initial
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
