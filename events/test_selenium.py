@@ -49,11 +49,6 @@ class MySeleniumTests(StaticLiveServerTestCase):
         new_order_btn = self.selenium.find_element(By.ID, "create-order-btn")
         new_order_btn.click()
 
-        # Wait for form to be present
-        WebDriverWait(self.selenium, 10).until(
-            EC.presence_of_element_located((By.ID, "id_purchaser_name"))
-        )
-
         # New order page
         name = self.selenium.find_element(By.ID, "id_purchaser_name")
         name.send_keys("NAME")
