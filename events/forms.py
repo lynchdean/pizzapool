@@ -78,7 +78,9 @@ class ServingCreateForm(forms.ModelForm):
         super(ServingCreateForm, self).__init__(*args, **kwargs)
         initial = kwargs.get('initial')
         if initial:
-            remaining = initial['pizza_order'].get_total_remaining()
+            self.order = initial.get('order')
+            remaining = self.order.get_total_remaining()
             self.fields['number_of_servings'].widget.attrs.update(
-                {'max': remaining},
+                {'max': remaining, 'min': 1}
             )
+            self.fields['number_of_servings'].help_text = f"Maximum {remaining} serving(s) available"

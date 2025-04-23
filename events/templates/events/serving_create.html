@@ -4,7 +4,7 @@
 {% block content %}
     <div class="container text-light p-3">
         <h3>Join Order:</h3>
-        {% if not pizza_order.event_is_locked %}
+        {% if not order.event_is_locked %}
             {% load crispy_forms_tags %}
             <form class="my-class" method="post">
                 {% csrf_token %}

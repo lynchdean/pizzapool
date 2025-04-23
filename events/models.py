@@ -79,7 +79,7 @@ class Event(models.Model):
 
 class Order(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    purchaser_name = models.CharField("Name", max_length=50)
+    purchaser_name = models.CharField("Your Name", max_length=50)
     purchaser_whatsapp = PhoneNumberField("WhatsApp", null=False, blank=False)
     purchaser_revolut = models.CharField("Revolut username", max_length=16, validators=[alphanumeric])
     description = models.CharField("Food description (e.g. Pizza type)", max_length=100)
