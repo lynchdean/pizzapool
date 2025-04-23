@@ -4,6 +4,8 @@ from decimal import Decimal
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.test import override_settings
 from selenium.webdriver import ActionChains
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -51,6 +53,11 @@ class MySeleniumTests(StaticLiveServerTestCase):
         new_order_btn = self.selenium.find_element(By.ID, "create-order-btn")
         new_order_btn.click()
 
+        # Wait for form to be present
+        WebDriverWait(self.selenium, 10).until(
+            EC.presence_of_element_located((By.ID, "id_purchaser_name"))
+        )
+
         # New order page
         name = self.selenium.find_element(By.ID, "id_purchaser_name")
         name.send_keys("NAME")
@@ -66,7 +73,6 @@ class MySeleniumTests(StaticLiveServerTestCase):
         slices.clear()
         slices.send_keys("7")
         confirm_btn = self.selenium.find_element(By.ID, "confirm-order-btn")
-        # ActionChains(self.selenium).move_to_element(confirm_btn).perform()
         confirm_btn.click()
         time.sleep(2)
         # Check returned to Event page
