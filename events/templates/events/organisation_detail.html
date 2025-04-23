@@ -13,38 +13,18 @@
         </div>
     </div>
 
-
-
     {% if request.user.organisation == organisation %}
         <div class="container border-2 border-bottom pb-3 mb-3">
             <h4 class="text-light text-center">Admin Actions:</h4>
-            {% if not organisation.stripe_account_verified %}
-                <div class="alert alert-warning text-center" role="alert">
-                    <span>Warning! You cannot create a new Event until your organisation is linked with a verified Stripe Account ID.</span>
-                </div>
-            {% endif %}
-
             <div class="text-center">
                 <a class="btn btn-outline-light rounded-pill "
                    href="{% url 'events:org-update' organisation.path %}">
                     Update Organisation
                 </a>
-                {% if organisation.stripe_account_verified %}
-                    <a class="btn btn-outline-light rounded-pill ms-2"
-                       href="{% url 'events:event-create' object.path %}">
-                        Create Event
-                    </a>
-                {% else %}
-                    <a class="btn btn-outline-light rounded-pill ms-2 disabled"
-                       href="{% url 'events:event-create' object.path %}" aria-disabled>
-                        Create Event
-                    </a>
-                    <a class="btn btn-outline-light rounded-pill ms-2"
-                       href="{% url 'events:user' user.username %}">
-                        Finish setting up your Stripe account
-                    </a>
-                {% endif %}
-
+                <a class="btn btn-outline-light rounded-pill ms-2"
+                   href="{% url 'events:event-create' object.path %}">
+                    Create Event
+                </a>
             </div>
         </div>
     {% endif %}

@@ -2,10 +2,7 @@ import time
 from decimal import Decimal
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from django.test import override_settings
 from selenium.webdriver import ActionChains
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
