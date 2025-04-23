@@ -43,7 +43,6 @@ class MySeleniumTests(StaticLiveServerTestCase):
         self.selenium.get(f"{self.live_server_url}/{self.org_path}/")
         self.assertEqual(self.selenium.current_url, f'{self.live_server_url}/test-org/')
 
-    @override_settings(DEBUG=True)
     def test_order_creation(self):
         # Event page
         self.selenium.get(f'{self.live_server_url}/{self.org_path}/{self.event.slug}/')
