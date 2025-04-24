@@ -15,7 +15,7 @@ django-environ==0.11.2
 django-phonenumber-field==7.3.0
 django-sqids==0.2.0
 gunicorn==23.0.0
-h11==0.14.0
+h11==0.16.0
 idna==3.7
 isort==5.13.2
 mccabe==0.7.0
