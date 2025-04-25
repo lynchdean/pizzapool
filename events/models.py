@@ -79,66 +79,50 @@ class Event(models.Model):
 
 class Order(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    purchaser_name = models.CharField("Your Name", max_length=50)
-    purchaser_whatsapp = PhoneNumberField("WhatsApp", null=False, blank=False)
-    purchaser_revolut = models.CharField("Revolut username", max_length=16, validators=[alphanumeric])
+    name = models.CharField("Your Name", max_length=50)
+    whatsapp = PhoneNumberField("WhatsApp", null=False, blank=False)
+    revolut = models.CharField("Revolut username", max_length=16, validators=[alphanumeric])
     description = models.CharField("Food description (e.g. Pizza type)", max_length=100)
-    price_per_serving = models.DecimalField(max_digits=4, decimal_places=2)
-    available_servings = models.PositiveIntegerField("Servings available to be claimed by other users",
-                                                     default=1, validators=[MinValueValidator(1)])
+    serving_price = models.DecimalField("Price of individual serving", max_digits=4, decimal_places=2)
 
     def __str__(self) -> str:
-        return f"{self.purchaser_name} - {self.description}"
+        return f"{self.name} - {self.description}"
 
-    def matched_servings(self):
+    def get_servings(self):
         """Returns Servings linked with this order, returns empty queryset if no slices are linked"""
         return Serving.objects.filter(order=self.id)
 
-    def get_total_claimed(self) -> int:
-        """Returns the number of slices linked with this order"""
-        matched_servings = self.matched_servings()
-        if matched_servings:
-            return matched_servings.aggregate(Sum('number_of_servings'))['number_of_servings__sum']
-        else:
-            return 0
-
-    def get_total_remaining(self):
-        """Returns the number of servings that have not been claimed from the order"""
-        return self.available_servings - self.get_total_claimed()
-
     def event_is_locked(self):
         return self.event.locked
-
-    def _validate_available_servings_maximum(self):
-        if self.available_servings >= self.event.servings_per_order:
-            raise ValidationError(
-                "Available servings cannot be greater than or equal to the total servings in the order.",
-                code="servings gte total servings")
 
     def _validate_event_is_unlocked(self):
         if self.event_is_locked():
             raise ValidationError("Event is locked", code="locked")
 
     def save(self, *args, **kwargs):
-        self._validate_available_servings_maximum()
         self._validate_event_is_unlocked()
         super(Order, self).save(*args, **kwargs)
 
 
 class Serving(models.Model):
+    STATUS_CHOICES = (
+        ('unclaimed', 'Unclaimed'),
+        ('reserved', 'Reserved'),
+        ('claimed', 'Claimed'),
+    )
+
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    buyer_name = models.CharField("Name", max_length=50)
-    buyer_whatsapp = PhoneNumberField("WhatsApp", null=False, blank=False)
-    number_of_servings = models.PositiveIntegerField(default=1, validators=[
-        MinValueValidator(1)])
+    name = models.CharField("Name", max_length=50, blank=True)
+    whatsapp = PhoneNumberField("WhatsApp", null=True, blank=False)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='unclaimed')
 
     def __str__(self) -> str:
-        return f"{self.buyer_name}"
+        if self.status == 'unclaimed':
+            return f"Unclaimed ({self.order})"
+        return f"{self.name} ({self.order})"
 
     def save(self, *args, **kwargs):
-        if self.id is None:
-            if self.order.event_is_locked():
-                raise ValidationError("Event is locked", code="locked")
-            if self.number_of_servings > self.order.get_total_remaining():
-                raise ValidationError("Insufficient remaining servings", code="insufficient_servings")
+        """Prevent new order creation if the Event is locked"""
+        if self.id is None and self.order.event_is_locked():
+            raise ValidationError("Event is locked", code="locked")
         super(Serving, self).save(*args, **kwargs)

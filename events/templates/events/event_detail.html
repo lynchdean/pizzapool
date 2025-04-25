@@ -99,15 +99,15 @@
                                 </div>
                             {% endfor %}
                         </div>
-
-                        <div class="container text-center mb-3">
-                            {% for x in ""|ljust:order.get_total_claimed %}
-                                ✔️
-                            {% endfor %}
-                            {% for x in ""|ljust:order.get_total_remaining %}
-                                🍕
-                            {% endfor %}
-                        </div>
+                        {# TODO replace with new logic to display remaining slices #}
+                        {#                        <div class="container text-center mb-3">#}
+                        {#                            {% for x in ""|ljust:order.get_total_claimed %}#}
+                        {#                                ✔️#}
+                        {#                            {% endfor %}#}
+                        {#                            {% for x in ""|ljust:order.get_total_remaining %}#}
+                        {#                                🍕#}
+                        {#                            {% endfor %}#}
+                        {#                        </div>#}
 
                         <div class="d-grid ">
                             {% if order.event_is_locked %}

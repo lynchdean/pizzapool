@@ -1,4 +1,5 @@
 from django import forms
+from django.core.validators import MaxValueValidator
 from django.forms import FileInput, ImageField
 
 from events.models import Organisation, Order, Serving, Event
@@ -36,12 +37,19 @@ class EventEditForm(forms.ModelForm):
 
 
 class OrderCreateForm(forms.ModelForm):
+    reserved_servings = forms.IntegerField(
+        label="How many servings do you want to claim for yourself?",
+        min_value=0,
+        initial=1,
+        required=True,
+        help_text="Number of servings you want to keep for yourself"
+    )
+
     class Meta:
         model = Order
-        fields = ['purchaser_name', 'purchaser_whatsapp', 'purchaser_revolut', 'description', 'price_per_serving',
-                  'available_servings']
+        fields = ['name', 'whatsapp', 'revolut', 'description', 'serving_price']
         error_messages = {
-            'purchaser_whatsapp': {
+            'whatsapp': {
                 'invalid': "Enter a valid phone number (e.g. 087 123 4567) or a number with an international call prefix.",
             },
         }
@@ -49,27 +57,26 @@ class OrderCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(OrderCreateForm, self).__init__(*args, **kwargs)
         self.event = self.initial.get('event')
-        if self.event:
-            self.fields['available_servings'].widget.attrs.update(
-                {'min': 1, 'max': self.event.servings_per_order - 1},
-            )
-        self.fields['price_per_serving'].widget.attrs.update(
-            {'min': 0.01},
-        )
 
-    def clean_available_servings(self):
-        available_servings = self.cleaned_data.get('available_servings')
-        if self.event and available_servings > self.event.servings_per_order:
-            raise forms.ValidationError("Available slices cannot be greater than the total servings in the order.")
-        return available_servings
+        # Set the max value for reserved_servings based on event settings
+        if self.event:
+            max_servings = self.event.servings_per_order
+            self.fields['reserved_servings'].validators.append(MaxValueValidator(max_servings))
+            self.fields['reserved_servings'].help_text = f"Maximum {max_servings} serving(s) available"
+
+    def clean_reserved_servings(self):
+        reserved_servings = self.cleaned_data.get('reserved_servings')
+        if self.event and reserved_servings > self.event.servings_per_order:
+            raise forms.ValidationError(f"You cannot claim more than {self.event.servings_per_order} servings.")
+        return reserved_servings
 
 
 class ServingCreateForm(forms.ModelForm):
     class Meta:
         model = Serving
-        fields = "buyer_name", "buyer_whatsapp", "number_of_servings"
+        fields = "name", "whatsapp"
         error_messages = {
-            'buyer_whatsapp': {
+            'whatsapp': {
                 'invalid': "Enter a valid phone number (e.g. 087 123 4567) or a number with an international call prefix.",
             },
         }

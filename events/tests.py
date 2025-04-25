@@ -39,7 +39,7 @@ class OrderModelTests(TestCase):
         matched_servings() returns empty queryset if there are no servings linked to the order.
         :return:
         """
-        self.assertFalse(self.order.matched_servings().exists())
+        self.assertFalse(self.order.get_servings().exists())
 
     def test_matched_servings_returns_results(self):
         """
@@ -47,7 +47,7 @@ class OrderModelTests(TestCase):
         :return:
         """
         create_serving(order=self.order)
-        self.assertTrue(self.order.matched_servings().exists())
+        self.assertTrue(self.order.get_servings().exists())
 
     def test_matched_servings_returns_correct_amount(self):
         """
@@ -56,7 +56,7 @@ class OrderModelTests(TestCase):
         """
         for _ in range(3):
             create_serving(order=self.order)
-        self.assertTrue(self.order.matched_servings().count() == 3)
+        self.assertTrue(self.order.get_servings().count() == 3)
 
     def test_matched_servings_returns_correct_amount_if_slices_deleted(self):
         """
@@ -65,9 +65,9 @@ class OrderModelTests(TestCase):
         """
         create_serving(order=self.order, number_of_servings=3)
         servings = create_serving(order=self.order, number_of_servings=2)
-        self.assertTrue(self.order.matched_servings().count() == 2)
+        self.assertTrue(self.order.get_servings().count() == 2)
         servings.delete()
-        self.assertTrue(self.order.matched_servings().count() == 1)
+        self.assertTrue(self.order.get_servings().count() == 1)
 
     def test_get_total_claimed_returns_zero_if_no_servings(self):
         """

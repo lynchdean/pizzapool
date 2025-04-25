@@ -176,7 +176,31 @@ class OrderCreateView(generic.CreateView):
 
     def form_valid(self, form):
         form.instance.event = self.event
-        return super().form_valid(form)
+        response = super().form_valid(form)
+
+        # Get the number of servings the creator wants to reserve
+        reserved_servings = form.cleaned_data.get('reserved_servings', 0)
+
+        # Create servings for the reserved amount (claimed by creator)
+        if reserved_servings > 0:
+            for _ in range(reserved_servings):
+                Serving.objects.create(
+                    order=self.object,
+                    name=self.object.name,
+                    whatsapp=self.object.whatsapp,
+                    status='claimed'
+                )
+
+        # Create unclaimed servings for the remaining slots
+        remaining_servings = self.event.servings_per_order - reserved_servings
+        if remaining_servings > 0:
+            for _ in range(remaining_servings):
+                Serving.objects.create(
+                    order=self.object,
+                    status='unclaimed'
+                )
+
+        return response
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -15,10 +15,6 @@
             <form class="my-class" method="post">
                 {% csrf_token %}
                 {{ form|crispy }}
-                <div class="form-text text-light mt-4 mb-2">
-                    There's {{ event.servings_per_order }} servings in each order - don't forget to take away any you
-                    want to keep for yourself.
-                </div>
                 <div class="form-text text-light mb-2">
                     Please make sure all details are correct before confirming, you cannot edit it once done.
                 </div>
